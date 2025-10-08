@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= trip ? "Edit Trip" : "Add Trip" %></title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 p-6 flex flex-col">
+    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
+    <nav class="space-y-4">
+      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
+      <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
+      <a href="/income" class="block hover:text-blue-400">💰 Income</a>
+      <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+      <a href="/trips" class="block text-blue-400">✈️ Trips</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <h2 class="text-2xl font-semibold mb-6"><%= trip ? "Edit Trip" : "Add Trip" %></h2>
+
+    <form action="<%= trip ? '/trips/edit/' + trip._id : '/trips' %>" method="POST" class="space-y-4">
+      <div>
+        <label class="block">Title</label>
+        <input type="text" name="title" value="<%= trip ? trip.title : '' %>" required class="w-full p-2 rounded text-black">
+      </div>
+      <div>
+        <label class="block">Destination</label>
+        <input type="text" name="destination" value="<%= trip ? trip.destination : '' %>" required class="w-full p-2 rounded text-black">
+      </div>
+      <div>
+        <label class="block">Budget</label>
+        <input type="number" name="budget" value="<%= trip ? trip.budget : '' %>" required class="w-full p-2 rounded text-black">
+      </div>
+      <div>
+        <label class="block">Start Date</label>
+        <input type="date" name="startDate" value="<%= trip ? trip.startDate.toISOString().split('T')[0] : '' %>" required class="w-full p-2 rounded text-black">
+      </div>
+      <div>
+        <label class="block">End Date</label>
+        <input type="date" name="endDate" value="<%= trip ? trip.endDate.toISOString().split('T')[0] : '' %>" required class="w-full p-2 rounded text-black">
+      </div>
+
+      <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg">
+        <%= trip ? "Update Trip" : "Add Trip" %>
+      </button>
+    </form>
+  </main>
+
+</body>
+</html>

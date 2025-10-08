@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+
+  <div class="flex h-screen">
+    
+    <!-- ✅ Sidebar -->
+    <aside class="w-64 bg-gray-800 p-6 flex flex-col">
+      <h1 class="text-2xl font-bold mb-8">Expensio</h1>
+      <nav class="space-y-4">
+        <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
+        <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
+        <a href="/income" class="block hover:text-blue-400">💰 Income</a>
+        <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
+        <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+        <hr class="border-gray-700 my-4">
+        <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
+      </nav>
+    </aside>
+
+    <!-- ✅ Main Content -->
+    <main class="flex-1 p-8 overflow-y-auto">
+      
+      <!-- Quick Access -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <a href="/expenses/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Expense</a>
+        <a href="/income/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Income</a>
+        <a href="/trips/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Trip</a>
+        <a href="/savings/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Savings</a>
+      </div>
+
+      <!-- Recent Expenses -->
+      <div class="bg-gray-800 p-6 rounded-lg shadow mb-8">
+        <h2 class="text-xl font-bold mb-4">Recent Expenses</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="pb-2">Description</th>
+              <th class="pb-2">Category</th>
+              <th class="pb-2">Amount</th>
+              <th class="pb-2">Date</th>
+              <th class="pb-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (recentExpenses.length > 0) { %>
+              <% recentExpenses.forEach(expense => { %>
+                <tr class="border-b border-gray-700">
+                  <td class="py-2"><%= expense.description %></td>
+                  <td><%= expense.category %></td>
+                  <td>₹<%= expense.amount %></td>
+                  <td><%= expense.date.toDateString() %></td>
+                  <td>
+                    <a href="/expenses/<%= expense._id %>/edit" class="text-blue-400">Edit</a> |
+                    <form action="/expenses/<%= expense._id %>?_method=DELETE" method="POST" class="inline">
+                      <button type="submit" class="text-red-400">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="py-4 text-center">No recent expenses found</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="flex justify-between mt-4">
+          <% if (pagination && pagination.page > 1) { %>
+            <a href="?page=<%= pagination.page - 1 %>" class="px-4 py-2 bg-gray-700 rounded">⬅ Prev</a>
+          <% } %>
+          <% if (pagination && pagination.page < pagination.pages) { %>
+            <a href="?page=<%= pagination.page + 1 %>" class="px-4 py-2 bg-gray-700 rounded">Next ➡</a>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+          <h2 class="text-xl font-bold mb-4">Expenses by Category</h2>
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow">
+          <h2 class="text-xl font-bold mb-4">Day-to-Day Expenses</h2>
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ✅ Safe JSON data -->
+  <script id="chart-data" type="application/json">
+    {
+      "categoryLabels": <%- JSON.stringify(categoryLabels || []) %>,
+      "categoryData": <%- JSON.stringify(categoryData || []) %>,
+      "dailyLabels": <%- JSON.stringify(dailyLabels || []) %>,
+      "dailyData": <%- JSON.stringify(dailyData || []) %>
+    }
+  </script>
+
+  <!-- Chart.js Script -->
+  <script>
+    const chartData = JSON.parse(document.getElementById("chart-data").textContent);
+
+    const categoryLabels = chartData.categoryLabels;
+    const categoryData = chartData.categoryData;
+    const dailyLabels = chartData.dailyLabels;
+    const dailyData = chartData.dailyData;
+
+    // Pie Chart
+    const ctxPie = document.getElementById("pieChart").getContext("2d");
+    if (categoryLabels.length > 0) {
+      new Chart(ctxPie, {
+        type: "pie",
+        data: {
+          labels: categoryLabels,
+          datasets: [{
+            label: "Expenses by Category",
+            data: categoryData,
+            backgroundColor: ["#4caf50", "#2196f3", "#ff9800", "#9c27b0", "#f44336"]
+          }]
+        }
+      });
+    } else {
+      ctxPie.canvas.parentNode.innerHTML = "<p class='text-center text-gray-400'>No category data available</p>";
+    }
+
+    // Bar Chart
+    const ctxBar = document.getElementById("barChart").getContext("2d");
+    if (dailyLabels.length > 0) {
+      new Chart(ctxBar, {
+        type: "bar",
+        data: {
+          labels: dailyLabels,
+          datasets: [{
+            label: "Expenses (₹)",
+            data: dailyData,
+            backgroundColor: "#03a9f4"
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    } else {
+      ctxBar.canvas.parentNode.innerHTML = "<p class='text-center text-gray-400'>No daily expense data available</p>";
+    }
+  </script>
+</body>
+</html>
