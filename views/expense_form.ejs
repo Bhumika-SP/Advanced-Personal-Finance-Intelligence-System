@@ -1,14 +1,18 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title><%= expense ? "Edit Expense" : "New Expense" %></title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
 </head>
 <body class="bg-gray-900 text-white flex h-screen">
-  
+
   <!-- Sidebar -->
   <aside class="w-64 bg-gray-800 p-6 flex flex-col">
     <h1 class="text-2xl font-bold mb-8">Expensio</h1>
@@ -25,17 +29,21 @@
     <form action="<%= expense ? '/expenses/edit/' + expense._id : '/expenses' %>" method="POST" class="space-y-4">
       <div>
         <label class="block mb-1">Description</label>
-        <input type="text" name="description" value="<%= expense ? expense.description : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <input id="description" type="text" name="description" value="<%= expense ? expense.description : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
       </div>
 
       <div>
         <label class="block mb-1">Category</label>
-        <input type="text" name="category" value="<%= expense ? expense.category : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <div class="flex gap-2">
+          <input id="category" type="text" name="category" value="<%= expense ? expense.category : '' %>" required class="flex-1 p-2 rounded bg-gray-800 border border-gray-700">
+          <button id="btn-suggest" type="button" class="bg-purple-600 hover:bg-purple-500 px-3 py-2 rounded">Suggest</button>
+        </div>
+        <div id="suggestion" class="text-sm text-gray-300 mt-1"></div>
       </div>
 
       <div>
         <label class="block mb-1">Amount (₹)</label>
-        <input type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <input id="amount" type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
       </div>
 
       <div>
@@ -47,6 +55,44 @@
         💾 Save
       </button>
     </form>
+    <script>
+      const btn = document.getElementById('btn-suggest');
+      const desc = document.getElementById('description');
+      const amt = document.getElementById('amount');
+      const cat = document.getElementById('category');
+      const sug = document.getElementById('suggestion');
+      if (btn) {
+        btn.addEventListener('click', async () => {
+          const description = desc?.value || '';
+          const amount = amt?.value || '';
+          if (!description && !amount) return;
+          btn.disabled = true;
+          const oldText = btn.textContent;
+          btn.textContent = '...';
+          sug.textContent = '';
+          try {
+            const res = await fetch('/ai/categorize', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ description, amount })
+            });
+            const data = await res.json();
+            if (data && data.category) {
+              cat.value = data.category;
+              const conf = typeof data.confidence === 'number' ? Math.round(data.confidence * 100) : null;
+              sug.textContent = conf !== null ? `Suggested: ${data.category} (${conf}%)` : `Suggested: ${data.category}`;
+            } else {
+              sug.textContent = 'No suggestion available.';
+            }
+          } catch (e) {
+            sug.textContent = 'Suggestion failed.';
+          } finally {
+            btn.disabled = false;
+            btn.textContent = oldText;
+          }
+        });
+      }
+    </script>
   </main>
 </body>
 </html>

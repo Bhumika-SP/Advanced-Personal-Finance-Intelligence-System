@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budgets</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white flex h-screen">
+  <div class="flex min-h-screen w-full">
+  <aside class="w-64 bg-gray-800 p-6 flex flex-col">
+    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
+    <nav class="space-y-4">
+      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
+      <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
+      <a href="/income" class="block hover:text-blue-400">💰 Income</a>
+      <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
+      <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+      <a href="/budgets" class="block text-blue-400">📊 Budgets</a>
+      <a href="/subscriptions" class="block hover:text-blue-400">🔁 Subscriptions</a>
+      <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
+      <a href="/alerts" class="block hover:text-blue-400">🔔 Alerts</a>
+      <hr class="border-gray-700 my-4">
+      <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-semibold">Budgets - <%= period %></h2>
+      <a href="/budgets/new?period=<%= encodeURIComponent(period) %>" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded">➕ New Budget</a>
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded mb-6">
+      <form method="GET" action="/budgets" class="flex items-center gap-3">
+        <label>Period</label>
+        <input type="month" name="period" value="<%= period %>" class="p-2 rounded bg-gray-900 border border-gray-700" />
+        <button class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">Go</button>
+      </form>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-gray-800 rounded">
+        <thead>
+          <tr class="bg-gray-700 text-gray-300 sticky top-0 z-20">
+            <th class="py-3 px-4 cursor-pointer" data-sort="text">Category</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Target</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Spent</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Remaining</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Progress</th>
+            <th class="py-3 px-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bud-tbody">
+          <% if (rows && rows.length) { %>
+            <% rows.forEach((r, i) => { %>
+              <tr class="border-t border-gray-700 <%= i % 2 ? 'bg-gray-900' : '' %>" data-cat="<%= r.budget.category %>" data-target="<%= r.budget.amount %>" data-spent="<%= r.spent %>" data-rem="<%= r.remaining %>" data-prog="<%= r.progress %>">
+                <td class="py-3 px-4"><%= r.budget.category %> <% if (r.overspend && r.budget.alertsOn) { %><span class="text-red-400">• Overspent</span><% } %></td>
+                <td class="py-3 px-4">₹<%= r.budget.amount %></td>
+                <td class="py-3 px-4">₹<%= r.spent %></td>
+                <td class="py-3 px-4">₹<%= r.remaining %></td>
+                <td class="py-3 px-4">
+                  <div class="w-full bg-gray-700 h-3 rounded">
+                    <div class="h-3 rounded <%= r.overspend ? 'bg-red-500' : 'bg-green-500' %>" style="width: <%= r.progress %>%"></div>
+                  </div>
+                </td>
+                <td class="py-3 px-4 space-x-3">
+                  <a href="/budgets/edit/<%= r.budget._id %>" class="text-blue-400 px-2 py-1 inline-block">Edit</a>
+                  <form action="/budgets/delete/<%= r.budget._id %>" method="POST" class="inline" onsubmit="return confirm('Delete budget?')">
+                    <button type="submit" class="text-red-400 px-2 py-1 rounded">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="6" class="py-4 text-center text-gray-400">No budgets configured for this period.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      // Column sorting
+      const tbody = document.getElementById('bud-tbody');
+      function val(tr, key) { return tr.getAttribute(key) || ''; }
+      function sortBy(key, type, asc) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((a,b)=>{
+          const va = val(a, key); const vb = val(b, key);
+          if (type==='number') return (Number(va)-Number(vb))*(asc?1:-1);
+          return String(va).localeCompare(String(vb))*(asc?1:-1);
+        });
+        rows.forEach(r=>tbody.appendChild(r));
+      }
+      const map = ['data-cat','data-target','data-spent','data-rem','data-prog'];
+      document.querySelectorAll('th[data-sort]').forEach((th,i)=>{
+        let asc = true;
+        th.addEventListener('click',()=>{ sortBy(map[i], th.getAttribute('data-sort'), asc); asc=!asc; });
+      });
+    </script>
+  </main>
+  </div>
+</body>
+</html>

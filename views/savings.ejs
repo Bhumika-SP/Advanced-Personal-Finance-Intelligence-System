@@ -4,20 +4,32 @@
   <meta charset="UTF-8">
   <title>Savings</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
 </head>
 <body class="bg-gray-900 text-white flex h-screen">
 
   <!-- Sidebar -->
   <aside class="w-64 bg-gray-800 p-6 flex flex-col">
-    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
-    <nav class="space-y-4">
-      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
-      <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
-      <a href="/income" class="block hover:text-blue-400">💰 Income</a>
-      <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
-      <a href="/savings" class="block text-blue-400">💵 Savings</a>
-    </nav>
-  </aside>
+      <h1 class="text-2xl font-bold mb-8">Expensio</h1>
+      <nav class="space-y-4">
+        <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
+        <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
+        <a href="/income" class="block hover:text-blue-400">💰 Income</a>
+        <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
+        <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+        <a href="/budgets" class="block hover:text-blue-400">📊 Budgets</a>
+        <a href="/subscriptions" class="block hover:text-blue-400">🔁 Subscriptions</a>
+        <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
+        <a href="/alerts" class="block hover:text-blue-400">🔔 Alerts</a>
+        <hr class="border-gray-700 my-4">
+        <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
+      </nav>
+    </aside>
 
   <!-- Main -->
   <main class="flex-1 p-8 overflow-y-auto">

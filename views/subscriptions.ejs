@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscriptions</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white flex h-screen">
+  <div class="flex min-h-screen w-full">
+  <aside class="w-64 bg-gray-800 p-6 flex flex-col">
+    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
+    <nav class="space-y-4">
+      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
+      <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
+      <a href="/income" class="block hover:text-blue-400">💰 Income</a>
+      <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
+      <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+      <a href="/budgets" class="block hover:text-blue-400">📊 Budgets</a>
+      <a href="/subscriptions" class="block text-blue-400">🔁 Subscriptions</a>
+      <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
+      <a href="/alerts" class="block hover:text-blue-400">🔔 Alerts</a>
+      <hr class="border-gray-700 my-4">
+      <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="flex-1 p-8 overflow-y-auto">
+    <h2 class="text-2xl font-semibold mb-6">Detected Subscriptions (last 6 months)</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-gray-800 rounded">
+        <thead>
+          <tr class="bg-gray-700 text-gray-300 sticky top-0 z-20">
+            <th class="py-3 px-4 cursor-pointer" data-sort="text">Vendor</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="text">Category</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Avg Amount</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="number">Charges</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="date">Last</th>
+            <th class="py-3 px-4 cursor-pointer" data-sort="date">Next est.</th>
+          </tr>
+        </thead>
+        <tbody id="subs-tbody">
+          <% if (subs && subs.length) { %>
+            <% subs.forEach((s, i) => { %>
+              <tr class="border-t border-gray-700 <%= i % 2 ? 'bg-gray-900' : '' %>"
+                  data-vendor="<%= s.vendor %>"
+                  data-cat="<%= s.category %>"
+                  data-avg="<%= s.avgAmount %>"
+                  data-count="<%= s.count %>"
+                  data-last="<%= new Date(s.lastDate).toISOString().slice(0,10) %>"
+                  data-next="<%= new Date(s.nextDate).toISOString().slice(0,10) %>">
+                <td class="py-3 px-4"><%= s.vendor %></td>
+                <td class="py-3 px-4"><%= s.category %></td>
+                <td class="py-3 px-4">₹<%= s.avgAmount %></td>
+                <td class="py-3 px-4"><%= s.count %></td>
+                <td class="py-3 px-4"><%= new Date(s.lastDate).toISOString().slice(0,10) %></td>
+                <td class="py-3 px-4"><%= new Date(s.nextDate).toISOString().slice(0,10) %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="6" class="py-4 text-center text-gray-400">No recurring subscriptions detected yet. Add more data and check back.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      // Sorting
+      const tbody = document.getElementById('subs-tbody');
+      function val(tr, key) { return tr.getAttribute(key) || ''; }
+      function sortBy(key, type, asc) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.sort((a,b)=>{
+          const va = val(a, key), vb = val(b, key);
+          if (type==='number') return (Number(va)-Number(vb))*(asc?1:-1);
+          if (type==='date') return (new Date(va)-new Date(vb))*(asc?1:-1);
+          return String(va).localeCompare(String(vb))*(asc?1:-1);
+        });
+        rows.forEach(r=>tbody.appendChild(r));
+      }
+      const map = ['data-vendor','data-cat','data-avg','data-count','data-last','data-next'];
+      document.querySelectorAll('th[data-sort]').forEach((th,i)=>{
+        let asc = true;
+        th.addEventListener('click',()=>{ sortBy(map[i], th.getAttribute('data-sort'), asc); asc=!asc; });
+      });
+    </script>
+  </main>
+  </div>
+</body>
+</html>

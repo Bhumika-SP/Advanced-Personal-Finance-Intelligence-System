@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome • Expensio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <header class="w-full">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-500 rounded-full"></div>
+        <span class="font-extrabold text-xl">Expensio</span>
+      </div>
+      <div class="space-x-4">
+        <a href="/login" class="px-4 py-2 rounded-md hover:bg-gray-800">Login</a>
+        <a href="/signup" class="px-4 py-2 rounded-md bg-blue-500 text-gray-900 font-semibold hover:bg-blue-400">Sign up</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    <div>
+      <div class="inline-flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1 text-sm text-blue-300 mb-6">
+        <span class="bg-blue-600 w-2 h-2 rounded-full"></span>
+        Track budgets – Set goals – Gain control
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+        Sync & Track
+        <br />
+        Your Expenses
+        <br />
+        With Expensio.
+      </h1>
+      <p class="text-gray-300 mb-8 max-w-xl">
+        Manage your budgets, set spending goals, and stay financially aware with an intuitive dashboard. All in real-time.
+      </p>
+      <div class="flex gap-4">
+        <a href="/signup" class="px-6 py-3 rounded-lg bg-blue-500 text-gray-900 font-semibold hover:bg-blue-400">Get Started</a>
+        <a href="/login" class="px-6 py-3 rounded-lg border border-gray-700 hover:bg-gray-800">I have an account</a>
+      </div>
+    </div>
+
+    <div class="relative">
+      <img src="/hero.png" alt="Expense cards" class="w-full rounded-2xl shadow-2xl ring-1 ring-gray-800" />
+      <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-blue-500 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
+      <div class="absolute -top-6 -right-6 w-20 h-20 bg-purple-500 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
+    </div>
+  </main>
+
+  <footer class="max-w-7xl mx-auto px-6 py-8 text-gray-400 text-sm">
+    <span>© <span id="y"></span> Expensio</span>
+  </footer>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
+
+

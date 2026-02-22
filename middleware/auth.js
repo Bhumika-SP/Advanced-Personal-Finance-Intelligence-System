@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "secret"; // must match everywhere
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
 function auth(req, res, next) {
   try {

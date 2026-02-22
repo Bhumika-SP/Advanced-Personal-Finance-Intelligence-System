@@ -5,22 +5,32 @@ const auth = require("../middleware/auth");
 
 router.get("/dashboard", auth, async (req, res) => {
   try {
+    const month = req.query.month; // YYYY-MM
+    let dateFilter = {};
+    let range = { start: null, end: null };
+    if (month && /^\d{4}-\d{2}$/.test(month)) {
+      const [y, m] = month.split("-").map(Number);
+      const start = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0));
+      const end = new Date(Date.UTC(y, m, 0, 23, 59, 59));
+      dateFilter = { date: { $gte: start, $lte: end } };
+      range = { start, end };
+    }
     const page = parseInt(req.query.page) || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
 
     // 🔹 Total count for pagination
-    const totalExpenses = await Expense.countDocuments({ user: req.userId });
+    const totalExpenses = await Expense.countDocuments({ user: req.userId, ...dateFilter });
     const pages = Math.ceil(totalExpenses / limit) || 1;
 
     // 🔹 Recent expenses (table)
-    const recentExpenses = await Expense.find({ user: req.userId })
+    const recentExpenses = await Expense.find({ user: req.userId, ...dateFilter })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
     // 🔹 All expenses (for charts only)
-    const allExpenses = await Expense.find({ user: req.userId });
+    const allExpenses = await Expense.find({ user: req.userId, ...dateFilter });
 
     // --- Pie Chart Data (categories) ---
     const categoryMap = {};
@@ -46,12 +56,36 @@ router.get("/dashboard", auth, async (req, res) => {
     );
     const dailyData = sortedDates.map(d => dailyMap[d]);
 
+    const totals = dailyData;
+    const mean = totals.length ? totals.reduce((a, b) => a + b, 0) / totals.length : 0;
+    const variance = totals.length ? totals.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / totals.length : 0;
+    const std = Math.sqrt(variance);
+    const threshold = mean + 2 * std;
+    const anomalies = sortedDates
+      .map((d, i) => ({ date: d, amount: dailyData[i] }))
+      .filter(x => x.amount > threshold)
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5)
+      .map(x => ({
+        label: new Date(x.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        amount: x.amount
+      }));
+
+    const topCategories = Object.entries(categoryMap)
+      .map(([name, total]) => ({ name, total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5);
+
     res.render("dashboard", {
       recentExpenses,
       categoryLabels,
       categoryData,
       dailyLabels,
       dailyData,
+      dailyKeys: sortedDates,
+      insights: { topCategories, anomalies, mean, std },
+      month: month || "",
+      range,
       pagination: { page, pages }
     });
   } catch (err) {

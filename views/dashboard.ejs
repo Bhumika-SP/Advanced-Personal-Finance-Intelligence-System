@@ -7,10 +7,16 @@
   <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+  </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white flex h-screen">
 
-  <div class="flex h-screen">
+  <div class="flex min-h-screen w-full">
     
     <!-- ✅ Sidebar -->
     <aside class="w-64 bg-gray-800 p-6 flex flex-col">
@@ -21,6 +27,10 @@
         <a href="/income" class="block hover:text-blue-400">💰 Income</a>
         <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
         <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
+        <a href="/budgets" class="block hover:text-blue-400">📊 Budgets</a>
+        <a href="/subscriptions" class="block hover:text-blue-400">🔁 Subscriptions</a>
+        <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
+        <a href="/alerts" class="block hover:text-blue-400">🔔 Alerts</a>
         <hr class="border-gray-700 my-4">
         <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
       </nav>
@@ -29,8 +39,13 @@
     <!-- ✅ Main Content -->
     <main class="flex-1 p-8 overflow-y-auto">
       
-      <!-- Quick Access -->
+      <!-- Month Switcher + Quick Access -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <form action="/dashboard" method="get" class="col-span-2 md:col-span-2 flex items-center gap-3 bg-gray-800 p-4 rounded-lg">
+          <label class="text-sm text-gray-300">Month</label>
+          <input type="month" name="month" value="<%= month || '' %>" class="p-2 rounded bg-gray-900 border border-gray-700"/>
+          <button class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded">Go</button>
+        </form>
         <a href="/expenses/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Expense</a>
         <a href="/income/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Income</a>
         <a href="/trips/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Trip</a>
@@ -42,7 +57,7 @@
         <h2 class="text-xl font-bold mb-4">Recent Expenses</h2>
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="border-b border-gray-700">
+            <tr class="border-b border-gray-700 sticky top-0 bg-gray-800 z-20">
               <th class="pb-2">Description</th>
               <th class="pb-2">Category</th>
               <th class="pb-2">Amount</th>
@@ -52,8 +67,8 @@
           </thead>
           <tbody>
             <% if (recentExpenses.length > 0) { %>
-              <% recentExpenses.forEach(expense => { %>
-                <tr class="border-b border-gray-700">
+              <% recentExpenses.forEach((expense, i) => { %>
+                <tr class="border-b border-gray-700 <%= i % 2 ? 'bg-gray-900' : '' %>">
                   <td class="py-2"><%= expense.description %></td>
                   <td><%= expense.category %></td>
                   <td>₹<%= expense.amount %></td>
@@ -85,15 +100,53 @@
         </div>
       </div>
 
-      <!-- Charts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Insights -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div class="bg-gray-800 p-6 rounded-lg shadow">
-          <h2 class="text-xl font-bold mb-4">Expenses by Category</h2>
-          <canvas id="pieChart"></canvas>
+          <h2 class="text-xl font-bold mb-4">Top Categories</h2>
+          <ul class="space-y-2">
+            <% if (insights && insights.topCategories && insights.topCategories.length) { %>
+              <% insights.topCategories.forEach(item => { %>
+                <li class="flex justify-between">
+                  <span><%= item.name %></span>
+                  <span>₹<%= item.total %></span>
+                </li>
+              <% }) %>
+            <% } else { %>
+              <li class="text-gray-400">No data</li>
+            <% } %>
+          </ul>
         </div>
         <div class="bg-gray-800 p-6 rounded-lg shadow">
-          <h2 class="text-xl font-bold mb-4">Day-to-Day Expenses</h2>
-          <canvas id="barChart"></canvas>
+          <h2 class="text-xl font-bold mb-4">Anomalies</h2>
+          <ul class="space-y-2">
+            <% if (insights && insights.anomalies && insights.anomalies.length) { %>
+              <% insights.anomalies.forEach(a => { %>
+                <li class="flex justify-between">
+                  <span><%= a.label %></span>
+                  <span>₹<%= a.amount %></span>
+                </li>
+              <% }) %>
+            <% } else { %>
+              <li class="text-gray-400">No anomalies detected</li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-800 p-5 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-3">Expenses by Category</h2>
+          <div class="h-56">
+            <canvas id="pieChart" height="220" class="w-full"></canvas>
+          </div>
+        </div>
+        <div class="bg-gray-800 p-5 rounded-lg shadow">
+          <h2 class="text-lg font-semibold mb-3">Day-to-Day Expenses</h2>
+          <div class="h-56">
+            <canvas id="barChart" height="220" class="w-full"></canvas>
+          </div>
         </div>
       </div>
 
@@ -106,7 +159,9 @@
       "categoryLabels": <%- JSON.stringify(categoryLabels || []) %>,
       "categoryData": <%- JSON.stringify(categoryData || []) %>,
       "dailyLabels": <%- JSON.stringify(dailyLabels || []) %>,
-      "dailyData": <%- JSON.stringify(dailyData || []) %>
+      "dailyData": <%- JSON.stringify(dailyData || []) %>,
+      "dailyKeys": <%- JSON.stringify(dailyKeys || []) %>,
+      "range": <%- JSON.stringify(range || {}) %>
     }
   </script>
 
@@ -118,11 +173,13 @@
     const categoryData = chartData.categoryData;
     const dailyLabels = chartData.dailyLabels;
     const dailyData = chartData.dailyData;
+    const dailyKeys = chartData.dailyKeys || [];
+    const range = chartData.range || {};
 
     // Pie Chart
     const ctxPie = document.getElementById("pieChart").getContext("2d");
     if (categoryLabels.length > 0) {
-      new Chart(ctxPie, {
+      const pie = new Chart(ctxPie, {
         type: "pie",
         data: {
           labels: categoryLabels,
@@ -131,6 +188,25 @@
             data: categoryData,
             backgroundColor: ["#4caf50", "#2196f3", "#ff9800", "#9c27b0", "#f44336"]
           }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom", labels: { boxWidth: 12 } }
+          },
+          onClick: (_, elements) => {
+            if (!elements.length) return;
+            const i = elements[0].index;
+            const cat = categoryLabels[i];
+            const params = new URLSearchParams();
+            if (cat) params.set('category', cat);
+            if (range && range.start && range.end) {
+              params.set('startDate', new Date(range.start).toISOString().slice(0,10));
+              params.set('endDate', new Date(range.end).toISOString().slice(0,10));
+            }
+            window.location.href = `/expenses?${params.toString()}`;
+          }
         }
       });
     } else {
@@ -140,18 +216,37 @@
     // Bar Chart
     const ctxBar = document.getElementById("barChart").getContext("2d");
     if (dailyLabels.length > 0) {
-      new Chart(ctxBar, {
+      const bar = new Chart(ctxBar, {
         type: "bar",
         data: {
           labels: dailyLabels,
           datasets: [{
             label: "Expenses (₹)",
             data: dailyData,
-            backgroundColor: "#03a9f4"
+            backgroundColor: "#03a9f4",
+            maxBarThickness: 18
           }]
         },
         options: {
-          scales: { y: { beginAtZero: true } }
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.08)" } },
+            x: { grid: { display: false } }
+          },
+          plugins: {
+            legend: { display: false }
+          },
+          onClick: (e, elements) => {
+            if (!elements.length) return;
+            const i = elements[0].index;
+            const key = dailyKeys[i];
+            if (!key) return;
+            const params = new URLSearchParams();
+            params.set('startDate', key);
+            params.set('endDate', key);
+            window.location.href = `/expenses?${params.toString()}`;
+          }
         }
       });
     } else {

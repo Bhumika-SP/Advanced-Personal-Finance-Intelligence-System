@@ -3,7 +3,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const JWT_SECRET = "secret";
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
 // ============================
 // 📌 Signup
