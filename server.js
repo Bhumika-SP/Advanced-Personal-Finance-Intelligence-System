@@ -26,8 +26,8 @@ app.use(helmet({
       "default-src": ["'self'"],
       "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
       "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      "img-src": ["'self'", "data:"],
-      "connect-src": ["'self'"]
+      "img-src": ["'self'", "data:", "https:"],
+      "connect-src": ["'self'", "https://generativelanguage.googleapis.com", "https://"]
     }
   },
   crossOriginEmbedderPolicy: false
