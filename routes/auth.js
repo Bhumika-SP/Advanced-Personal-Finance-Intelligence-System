@@ -40,7 +40,7 @@ router.post("/create", async (req, res) => {
     res.redirect("/dashboard");
   } catch (err) {
     console.error("SIGNUP ERROR:", err.message);
-    res.send("Something went wrong during signup");
+    res.send(`Signup Error: ${err.message}`);
   }
 });
 
@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
     res.redirect("/dashboard");
   } catch (err) {
     console.error("LOGIN ERROR:", err.message);
-    res.send("Something went wrong during login");
+    res.send(`Login Error: ${err.message}`);
   }
 });
 
