@@ -33,3 +33,5 @@ build/
 temp/
 tmp/
 .prettierrc
+.vercel
+.env*.local
