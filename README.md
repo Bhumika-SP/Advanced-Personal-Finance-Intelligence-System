@@ -155,16 +155,3 @@ Production Notes:
 - No automated tests yet (see `package.json` scripts).
 
 ---
-
-## License
-
-MIT (add your license text here)
-
----
-
-If you'd like, I can also:
-- Add a `.env.example` file
-- Add a small Docker Compose for Node + MongoDB
-- Add basic unit tests for route handlers
-
-Happy to help with any of those next steps! 🚀
