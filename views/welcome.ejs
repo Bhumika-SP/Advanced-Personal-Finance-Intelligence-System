@@ -4,65 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome • Expensio</title>
+  <!-- Using Tailwind 2.2.19 from CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Poppins', sans-serif; }
+    /* Cross-browser custom glowing shadows for Tailwind 2.2 */
+    .btn-glow-cyan { box-shadow: 0 0 15px rgba(34,211,238,0.4); }
+    .btn-glow-cyan:hover { box-shadow: 0 0 25px rgba(34,211,238,0.6); }
+    .text-gradient {
+      background: linear-gradient(to right, #22d3ee, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .shadow-hero {
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    /* Ambient glow elements */
+    .ambient-cyan { background-color: #06b6d4; filter: blur(80px); }
+    .ambient-purple { background-color: #9333ea; filter: blur(80px); }
   </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-  <header class="w-full">
-    <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 bg-blue-500 rounded-full"></div>
-        <span class="font-extrabold text-xl">Expensio</span>
+<body class="bg-app text-white min-h-screen pattern-bg overflow-x-hidden">
+  
+  <header class="w-full border-b border-gray-800 border-opacity-50 sticky top-0 z-50 bg-gray-900 bg-opacity-70 backdrop-filter backdrop-blur-md">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-12 py-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 btn-glow-cyan"></div>
+        <span class="font-extrabold text-2xl tracking-tight text-white hidden sm:block">Expensio</span>
       </div>
-      <div class="space-x-4">
-        <a href="/login" class="px-4 py-2 rounded-md hover:bg-gray-800">Login</a>
-        <a href="/signup" class="px-4 py-2 rounded-md bg-blue-500 text-gray-900 font-semibold hover:bg-blue-400">Sign up</a>
+      <div class="space-x-3 flex items-center">
+        <a href="/login" class="px-3 md:px-5 py-2 rounded-lg font-medium text-gray-300 hover:text-white hover:bg-gray-800 hover:underline transition-all duration-300">Login</a>
+        <a href="/signup" class="px-5 md:px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold transform hover:scale-105 btn-glow-cyan transition-all duration-300">Sign up</a>
       </div>
     </nav>
   </header>
 
-  <main class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-    <div>
-      <div class="inline-flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1 text-sm text-blue-300 mb-6">
-        <span class="bg-blue-600 w-2 h-2 rounded-full"></span>
-        Track budgets – Set goals – Gain control
+  <main class="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 flex flex-col items-center">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+      <!-- Left Section -->
+      <div class="flex flex-col items-center lg:items-start text-center lg:text-left bg-gray-900 bg-opacity-40 p-6 sm:p-10 rounded-3xl border border-gray-800 border-opacity-50 backdrop-filter backdrop-blur-sm shadow-xl w-full">
+        
+        <div class="inline-flex items-center gap-2 bg-gray-900 bg-opacity-80 border border-cyan-500 border-opacity-20 rounded-full px-4 py-1.5 text-xs sm:text-sm text-cyan-300 mb-6 sm:mb-8" style="box-shadow: 0 0 10px rgba(34,211,238,0.1);">
+          <span class="bg-cyan-400 w-2 h-2 rounded-full animate-pulse"></span>
+          Track budgets – Set goals – Gain control
+        </div>
+        
+        <!-- Typography scaling strictly structured per request! -->
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 tracking-tight max-w-2xl break-words whitespace-normal">
+          Sync & Track
+          <br class="hidden sm:block" />
+          <span class="text-gradient">Your Expenses</span>
+          <br class="hidden sm:block" />
+          With Expensio.
+        </h1>
+        
+        <p class="text-gray-400 text-base md:text-lg mb-8 max-w-xl leading-relaxed">
+          Manage your budgets, set spending goals, and stay financially aware with an intuitive, premium dashboard. All in real-time.
+        </p>
+        
+        <!-- CTA Layout safely wrapping without pushing off-screen bounds! -->
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <a href="/signup" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-center transform hover:scale-105 btn-glow-cyan transition-all duration-300 flex items-center justify-center gap-2">
+            Get Started <span class="text-xl leading-none">&rarr;</span>
+          </a>
+          <a href="/login" class="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-cyan-500 text-cyan-400 font-semibold text-center hover:bg-cyan-500 hover:bg-opacity-10 hover:text-cyan-300 transition-colors duration-300 flex items-center justify-center">
+            I have an account
+          </a>
+        </div>
       </div>
-      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-        Sync & Track
-        <br />
-        Your Expenses
-        <br />
-        With Expensio.
-      </h1>
-      <p class="text-gray-300 mb-8 max-w-xl">
-        Manage your budgets, set spending goals, and stay financially aware with an intuitive dashboard. All in real-time.
-      </p>
-      <div class="flex gap-4">
-        <a href="/signup" class="px-6 py-3 rounded-lg bg-blue-500 text-gray-900 font-semibold hover:bg-blue-400">Get Started</a>
-        <a href="/login" class="px-6 py-3 rounded-lg border border-gray-700 hover:bg-gray-800">I have an account</a>
-      </div>
-    </div>
 
-    <div class="relative">
-      <img src="/hero.png" alt="Expense cards" class="w-full rounded-2xl shadow-2xl ring-1 ring-gray-800" />
-      <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-blue-500 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
-      <div class="absolute -top-6 -right-6 w-20 h-20 bg-purple-500 rounded-full blur-2xl opacity-30 pointer-events-none"></div>
+      <!-- Right Image Context Block -->
+      <div class="relative group flex items-center justify-center w-full mt-8 lg:mt-0 p-4">
+        <!-- Exact ambient glows isolated correctly behind! -->
+        <div class="absolute -bottom-10 -left-6 w-48 sm:w-64 h-48 sm:h-64 rounded-full opacity-30 ambient-cyan pointer-events-none"></div>
+        <div class="absolute -top-10 -right-6 w-48 sm:w-64 h-48 sm:h-64 rounded-full opacity-30 ambient-purple pointer-events-none"></div>
+        
+        <!-- Image explicitly sized to clamp natively to columns! -->
+        <img src="/hero.png" alt="Expense cards" class="max-w-full h-auto relative z-10 rounded-2xl shadow-hero ring-1 ring-gray-700 ring-opacity-50" />
+      </div>
     </div>
   </main>
 
-  <footer class="max-w-7xl mx-auto px-6 py-8 text-gray-400 text-sm">
-    <span>© <span id="y"></span> Expensio</span>
+  <footer class="max-w-7xl mx-auto px-6 md:px-12 py-8 border-t border-gray-800 border-opacity-50 mt-10 w-full text-center sm:text-left">
+    <div class="flex flex-col sm:flex-row justify-between items-center text-gray-500 text-sm gap-4">
+      <span class="font-medium inline-block">© <span id="y"></span> Expensio. All rights reserved.</span>
+      <div class="flex gap-4">
+        <span class="hover:text-cyan-400 cursor-pointer transition-colors">Privacy</span>
+        <span class="hover:text-cyan-400 cursor-pointer transition-colors">Terms</span>
+      </div>
+    </div>
   </footer>
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
-
-
-

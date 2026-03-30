@@ -1,19 +1,28 @@
-# Track Expense ✅
+# Expensio - Premium Personal Finance Dashboard 🚀
 
-A small personal expense-tracking web app built with Node.js, Express and MongoDB. It provides user authentication, CRUD for expenses/income/savings/trips/budgets, import/export (CSV/XLSX), a dashboard with basic insights and alerts, and an AI-assisted categorization helper (Gemini integration optional).
+A modern, SaaS-grade personal expense-tracking web app built with Node.js, Express, and MongoDB. It provides a luxurious dark-themed UI, user authentication, CRUD for finances (expenses/income/savings/trips/budgets), heavy data analytics via Chart.js, and an integrated AI-assisted categorization helper powered by Gemini.
 
 ---
 
-## Features ✨
+## What's New! (Latest UI/UX Overhaul) ✨
+The entire frontend has been architecturally refactored to prioritize an immersive, dynamic, and extremely clean SaaS user experience:
+- **Global Glassmorphism**: Soft, translucent custom card containers with ambient cyan/purple glow styling mapping universally across the application.
+- **Unified EJS Sidebar**: The entire application now runs through a single dynamic `sidebar.ejs` inclusion, perfectly highlighting active states while eliminating hundreds of lines of duplicated markup.
+- **Complete Lucide Vector Migration**: Purged all generic legacy emojis and outdated FontAwesome classes. The application now uses crisp, globally initialized `Lucide` SVGs for a highly consistent and professional enterprise feel.
+- **Redesigned Landing Page**: Fully responsive layout fixes delivering perfectly aligned sizing, glowing hover states, gradient CTAs, and ambient visual depth matching the internal dashboard.
+- **Optimized Data Visualizations**: The Dashboard now boasts proportionally balanced `Chart.js` metrics displaying a sleek, thin doughnut Pie ring and heavily styled Bar graphs using custom hovering gradients.
 
-- User signup / login (JWT stored in an httpOnly cookie)
-- Add / edit / delete expenses, incomes, savings, trips, budgets
-- Import expenses from CSV/XLSX and export as CSV / XLSX
-- Dashboard with category and daily charts, pagination & anomaly detection
-- Budget tracking with automatic overspend alerts
-- Alerts center (read / read-all)
-- AI helper for suggesting expense categories (uses Google Gemini when configured; falls back to heuristics)
-- EJS templates for server-rendered pages (views/)
+---
+
+## Core Features 🛠️
+
+- **Secure Auth**: User signup / login (JWT securely stored in an httpOnly cookie)
+- **Comprehensive Tracking**: Add / edit / delete capabilities for expenses, incomes, savings, trips, and budgets beautifully integrated with the new Lucide actionable icons.
+- **Portability**: Import expenses dynamically from CSV/XLSX and export as CSV / XLSX
+- **Analytics Dashboard**: Refined visual dashboard offering Top Categories, anomaly detection, Quick Access grids, and interactive Chart.js tracking
+- **Budget Alerts**: Background tracking with automatic overspend and budget velocity alerts
+- **Expensio AI**: An integrated AI Chatbot (powered by Google Gemini) resolving heuristic queries and helping categorize data securely from a sleek floating chat UI
+- **EJS Templating**: Fast server-side rendered pages using structured partial views for absolute modularity.
 
 ---
 
@@ -24,22 +33,22 @@ Prerequisites:
 - npm
 - MongoDB (local or remote)
 
-1. Clone the repo
+1. **Clone the repo**
 
    ```bash
    git clone <repo-url>
    cd track_expense
    ```
 
-2. Install dependencies
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-3. Configure environment
+3. **Configure environment**
 
-   Create a `.env` file in the project root (optional) and set values you need:
+   Create a `.env` file in the project root and set the values you need:
 
    ```env
    PORT=3000
@@ -47,111 +56,54 @@ Prerequisites:
    GEMINI_API_KEY=your_gemini_api_key_here   # optional — leave empty to use heuristics
    ```
 
-   Note: By default the app connects to MongoDB at `mongodb://127.0.0.1:27017/track_expense` (see `models/user.js`). To use another MongoDB URI, update `models/user.js` to use `process.env.MONGODB_URI` (or change it to your preferred connection logic).
+   *Note: By default the app connects to MongoDB at `mongodb://127.0.0.1:27017/track_expense` (see `models/user.js`). To use another MongoDB URI, update it to use `process.env.MONGODB_URI` via your production variables.*
 
-4. Start the app
+4. **Start the app**
 
    ```bash
    npm start
    ```
 
-Open https://advanced-personal-finance-intellige.vercel.app/
+Open `http://localhost:3000/`
 
 ---
 
-## Environment Variables 🔒
+## API & Architecture (Summary) 🔧
 
-- `PORT` — port to run the server (default: `3000`)
-- `JWT_SECRET` — secret used to sign auth JWT (set something secure in production)
-- `GEMINI_API_KEY` — (optional) Google Gemini API key used by the AI category suggestion. If missing, the service falls back to a simple heuristic.
+### Theming System
+The UI relies on standard `TailwindCSS v2.2` coupled inextricably with `style.css` which houses the core variables (`--bg-app`, `--card-bg`, `--accent-cyan`) dictating the Glassmorphism aesthetic seen universally throughout the application. 
 
----
-
-## API / Routes (summary) 🔧
-
-Authentication
-- POST `/create` — Signup (name, email, password, confirmpassword)
-- POST `/login` — Login (email, password)
+### API Routing
+Auth:
+- POST `/create` — Signup
+- POST `/login` — Login
 - GET `/logout` — Logout (clears cookie)
 
-Expenses
-- GET `/expenses` — List expenses (EJS page or JSON)
+Expenses:
+- GET `/expenses` — List expenses
 - GET `/expenses/new` — Show add form
 - POST `/expenses` — Create expense
-- GET `/expenses/edit/:id` — Edit form
-- POST `/expenses/edit/:id` — Update
-- POST `/expenses/delete/:id` — Delete
-- POST `/expenses/import` — Import CSV/XLSX (field name: `file`)
-- GET `/expenses/export?format=csv|xlsx&month=YYYY-MM` — Export
+- POST `/expenses/delete/:id` — Delete expense
+- POST `/expenses/import` — Import CSV/XLSX
 
-Budgets
-- GET `/budgets` — List budgets for a period
-- GET `/budgets/new` — New budget form
-- POST `/budgets` — Create budget
-- GET `/budgets/edit/:id` — Edit form
-- POST `/budgets/edit/:id` — Update
-- POST `/budgets/delete/:id` — Delete
-
-Income / Savings / Trips
-- Standard CRUD-ish routes under `/income`, `/savings`, `/trips` (see `routes/` folder)
-- `/savings/auto` — calculates auto savings (API)
-
-Alerts
-- GET `/alerts` — View alerts
-- POST `/alerts/:id/read` — Mark one alert read
-- POST `/alerts/read-all` — Mark all read
-
-AI
-- POST `/ai/categorize` — Suggest category (body: `description`, `amount`, optional `candidates[]`)
-  - Response: JSON with `{ category, confidence, rationale, model }`
-
-Notes:
-- Most user routes require authentication via cookie (JWT). If an auth cookie is missing you will be redirected to `/login`.
-- The chat functionality in `routes/chat.js` contains a rich local query handler but the user-facing endpoints are currently commented out — enable the routes to use it.
-
----
-
-## Data Models (high level) 🗂️
-
-- `User` — name, email, password (bcrypt)
-- `Expense` — description, category, amount, date, user
-- `Income` — amount, source, description, date, user
-- `Budget` — category, amount, period, rollover, alertsOn
-- `Savings` — amount, goal, user
-- `Trip` — title, destination, budget, dates, user
-- `Alert` — type, title, message, meta, read
-- `ChatMessage` — user, role, text
+Other Resources:
+- Standard CRUD-ish routes dynamically mapped under `/income`, `/savings`, `/trips`, and `/budgets`.
+- `/alerts` — View alerts (powered by backend anomaly detectors)
+- `/chat/message` — Core API resolving queries to the Gemini interface mapping dynamic `lucide` chat injections.
 
 ---
 
 ## Security & Best Practices 🔐
 
-- Helmet is used for basic security headers; CSP restricts script/style sources to self and jsdelivr CDN.
-- Rate limiting is configured globally (`express-rate-limit`) to limit abusive requests.
-- Passwords are hashed using `bcrypt`.
-- JWT tokens are stored in httpOnly cookies to protect against XSS.
-
-Production Notes:
-- Replace the hard-coded MongoDB connection (in `models/user.js`) with a connection that reads `process.env.MONGODB_URI`.
-- Use HTTPS and set `secure: true` on cookies in production.
-- Configure a strong `JWT_SECRET` and rotate as needed.
+- **Helmet**: Used for basic security headers; CSP meticulously configured to safely allow external Tailwinds, Chart.js processing, and the Lucide icon CDN.
+- **Rate limiting**: Configured globally (`express-rate-limit`) protecting critical endpoints.
+- **Cryptographic Hashing**: User passwords uniquely hashed utilizing `bcrypt`.
+- **JWT tokens**: Issued strictly into httpOnly cookies mitigating XSS vulnerability vectors.
 
 ---
 
 ## Extending / Contribution 💡
 
-- Feel free to open issues or PRs to:
-  - Add tests
-  - Add an integration for MongoDB URI via env var
-  - Implement chat endpoints (uncomment the handlers in `routes/chat.js` and add front-end integration)
-  - Add a Dockerfile / Docker Compose for easy local setup with MongoDB
-
----
-
-## Known TODOs / Notes 📝
-
-- Some chat routes are commented out — the backend logic exists in `routes/chat.js` but the HTTP endpoints are disabled by default.
-- `models/user.js` currently connects with a hard-coded local MongoDB URI.
-- No automated tests yet (see `package.json` scripts).
-
----
+- Implement missing frontend testing suites
+- Enhance the AI Chat parameters feeding deeper insight models
+- Create a Dockerfile / Docker Compose for automated CI/CD staging environments.

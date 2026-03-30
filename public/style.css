@@ -1,0 +1,202 @@
+/* Modern SaaS Dashboard Theme Variables */
+:root {
+  --bg-app: #020617;
+  --bg-secondary: #0B1220;
+  --card-bg: rgba(15, 23, 42, 0.6);
+  --card-border: rgba(255, 255, 255, 0.05);
+  
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  
+  --accent-cyan: #14F1D9;
+  --accent-purple: #7C3AED;
+  --accent-highlight: #22D3EE;
+}
+
+body.bg-app {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  background-image: radial-gradient(circle at top left, rgba(20, 241, 217, 0.03), transparent 40%),
+                    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.03), transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Base resets for Typography */
+h1, h2, h3, h4, th {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+p, span, td, label {
+  color: var(--text-secondary);
+}
+
+/* Glassmorphism Cards */
+.bg-card-custom {
+  background: var(--card-bg) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px rgba(20, 241, 217, 0.1);
+  border-color: rgba(20, 241, 217, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color: #020617;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 4px 15px rgba(20, 241, 217, 0.15);
+}
+
+.btn-primary:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 25px rgba(20, 241, 217, 0.3);
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+  border-color: rgba(20, 241, 217, 0.4);
+}
+
+/* Inputs */
+input, select, textarea {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 10px rgba(20, 241, 217, 0.3) !important;
+}
+
+/* Sidebar Hover Interactions */
+.sidebar-nav-item {
+  color: var(--text-secondary);
+  border-left: 3px solid transparent;
+  padding-left: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--text-primary);
+  background: rgba(20, 241, 217, 0.05);
+  border-left: 3px solid var(--accent-cyan);
+  transform: translateX(4px);
+}
+
+.sidebar-nav-active {
+  color: var(--accent-cyan);
+  background: rgba(20, 241, 217, 0.1);
+  border-left: 3px solid var(--accent-cyan);
+  text-shadow: 0 0 8px rgba(20, 241, 217, 0.5);
+  padding-left: 1rem;
+}
+
+/* Tables */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+}
+
+thead tr {
+  background: transparent !important;
+}
+thead th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-secondary) !important;
+}
+
+tbody tr {
+  background: rgba(255, 255, 255, 0.02) !important;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+tbody td {
+  border: none !important;
+  color: var(--text-primary) !important;
+}
+
+tbody tr:first-child td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+tbody tr:first-child td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+tbody tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+tbody tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+tbody tr.table-row-hover:hover, tbody tr:hover {
+  background: rgba(20, 241, 217, 0.08) !important;
+  transform: scale(1.01);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar Customization for Dark Theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Staggered Animations */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide-up {
+  opacity: 0; 
+  animation: fadeSlideUp 0.6s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+
+/* Global Lucide Icon Resets */
+.lucide {
+  color: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+}

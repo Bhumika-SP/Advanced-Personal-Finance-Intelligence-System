@@ -1,11 +1,10 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Tailwind & Fonts -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,139 +12,118 @@
   <style>
     * { font-family: 'Poppins', sans-serif; }
   </style>
+  <link rel="stylesheet" href="/style.css">
+  
 </head>
-<body class="bg-gray-900 text-white flex h-screen">
-
+<body class="bg-app text-white flex h-screen">
   <div class="flex min-h-screen w-full">
     
     <!-- ✅ Sidebar -->
-    <aside class="w-64 bg-gray-800 p-6 flex flex-col">
-      <h1 class="text-2xl font-bold mb-8">Expensio</h1>
-      <nav class="space-y-4">
-        <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
-        <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
-        <a href="/income" class="block hover:text-blue-400">💰 Income</a>
-        <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
-        <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
-        <a href="/budgets" class="block hover:text-blue-400">📊 Budgets</a>
-        <a href="/subscriptions" class="block hover:text-blue-400">🔁 Subscriptions</a>
-        <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
-        <a href="/alerts" class="block hover:text-blue-400">🔔 Alerts</a>
-        <hr class="border-gray-700 my-4">
-        <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
-      </nav>
-    </aside>
+    <%- include('partials/sidebar', { activeTab: 'dashboard' }) %>
 
     <!-- ✅ Main Content -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100 flex flex-col gap-6 w-full pattern-bg">
       
-      <!-- Month Switcher + Quick Access -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <form action="/dashboard" method="get" class="col-span-2 md:col-span-2 flex items-center gap-3 bg-gray-800 p-4 rounded-lg">
-          <label class="text-sm text-gray-300">Month</label>
-          <input type="month" name="month" value="<%= month || '' %>" class="p-2 rounded bg-gray-900 border border-gray-700"/>
-          <button class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded">Go</button>
-        </form>
-        <a href="/expenses/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Expense</a>
-        <a href="/income/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Income</a>
-        <a href="/trips/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Trip</a>
-        <a href="/savings/new" class="bg-gray-700 p-4 rounded-lg text-center hover:bg-gray-600">➕ New Savings</a>
-      </div>
-
-      <!-- Recent Expenses -->
-      <div class="bg-gray-800 p-6 rounded-lg shadow mb-8">
-        <h2 class="text-xl font-bold mb-4">Recent Expenses</h2>
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-gray-700 sticky top-0 bg-gray-800 z-20">
-              <th class="pb-2">Description</th>
-              <th class="pb-2">Category</th>
-              <th class="pb-2">Amount</th>
-              <th class="pb-2">Date</th>
-              <th class="pb-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (recentExpenses.length > 0) { %>
-              <% recentExpenses.forEach((expense, i) => { %>
-                <tr class="border-b border-gray-700 <%= i % 2 ? 'bg-gray-900' : '' %>">
-                  <td class="py-2"><%= expense.description %></td>
-                  <td><%= expense.category %></td>
-                  <td>₹<%= expense.amount %></td>
-                  <td><%= expense.date.toDateString() %></td>
-                  <td>
-                    <a href="/expenses/<%= expense._id %>/edit" class="text-blue-400">Edit</a> |
-                    <form action="/expenses/<%= expense._id %>?_method=DELETE" method="POST" class="inline">
-                      <button type="submit" class="text-red-400">Delete</button>
-                    </form>
-                  </td>
-                </tr>
-              <% }) %>
-            <% } else { %>
-              <tr>
-                <td colspan="5" class="py-4 text-center">No recent expenses found</td>
-              </tr>
-            <% } %>
-          </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div class="flex justify-between mt-4">
-          <% if (pagination && pagination.page > 1) { %>
-            <a href="?page=<%= pagination.page - 1 %>" class="px-4 py-2 bg-gray-700 rounded">⬅ Prev</a>
-          <% } %>
-          <% if (pagination && pagination.page < pagination.pages) { %>
-            <a href="?page=<%= pagination.page + 1 %>" class="px-4 py-2 bg-gray-700 rounded">Next ➡</a>
-          <% } %>
-        </div>
-      </div>
-
-      <!-- Insights -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-gray-800 p-6 rounded-lg shadow">
-          <h2 class="text-xl font-bold mb-4">Top Categories</h2>
-          <ul class="space-y-2">
+      <!-- Top Section: Categories & Anomalies -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <!-- Top Categories -->
+        <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
+          <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
+             Top Categories
+          </h2>
+          <ul class="space-y-3 flex-1">
             <% if (insights && insights.topCategories && insights.topCategories.length) { %>
               <% insights.topCategories.forEach(item => { %>
-                <li class="flex justify-between">
-                  <span><%= item.name %></span>
-                  <span>₹<%= item.total %></span>
+                <li class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
+                  <span class="text-gray-400"><%= item.name %></span>
+                  <span class="font-semibold text-white">₹<%= item.total %></span>
                 </li>
               <% }) %>
             <% } else { %>
-              <li class="text-gray-400">No data</li>
+              <li class="text-gray-500 italic">No data</li>
             <% } %>
           </ul>
         </div>
-        <div class="bg-gray-800 p-6 rounded-lg shadow">
-          <h2 class="text-xl font-bold mb-4">Anomalies</h2>
-          <ul class="space-y-2">
+        
+        <!-- Anomalies -->
+        <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
+          <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
+             Anomalies
+          </h2>
+          <ul class="space-y-3 flex-1">
             <% if (insights && insights.anomalies && insights.anomalies.length) { %>
               <% insights.anomalies.forEach(a => { %>
-                <li class="flex justify-between">
-                  <span><%= a.label %></span>
-                  <span>₹<%= a.amount %></span>
+                <li class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
+                  <span class="text-gray-400"><%= a.label %></span>
+                  <span class="font-semibold text-rose-400">₹<%= a.amount %></span>
                 </li>
               <% }) %>
             <% } else { %>
-              <li class="text-gray-400">No anomalies detected</li>
+              <li class="text-gray-500 italic">No anomalies detected</li>
             <% } %>
           </ul>
         </div>
       </div>
 
-      <!-- Charts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-gray-800 p-5 rounded-lg shadow">
-          <h2 class="text-lg font-semibold mb-3">Expenses by Category</h2>
-          <div class="h-56">
-            <canvas id="pieChart" height="220" class="w-full"></canvas>
+      <!-- Quick Access Section -->
+      <div class="bg-card-custom p-6 rounded-2xl w-full shadow-lg">
+        <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-5">Quick Access</h3>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <a href="/expenses" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(236,72,153,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(236,72,153,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(236,72,153,0.15);">
+            <div class="absolute inset-0 bg-gradient-to-r from-pink-500/0 via-pink-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
+            <div class="bg-pink-500/20 p-2.5 rounded-full ring-1 ring-pink-500/30 group-hover:ring-pink-500/50 transition-all">
+              <i data-lucide="wallet" class="w-4 h-4 text-pink-400"></i>
+            </div>
+            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-pink-300 transition-colors">+ Add Expense</span>
+          </a>
+
+          <a href="/income" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(124,58,237,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(124,58,237,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(124,58,237,0.15);">
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
+            <div class="bg-purple-500/20 p-2.5 rounded-full ring-1 ring-purple-500/30 group-hover:ring-purple-500/50 transition-all">
+               <i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-purple-300 transition-colors">+ Add Income</span>
+          </a>
+
+          <a href="/savings" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(20,241,217,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(20,241,217,0.1) 0%, rgba(124,58,237,0.02) 100%); border: 1px solid rgba(20,241,217,0.15);">
+            <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
+            <div class="bg-cyan-500/20 p-2.5 rounded-full ring-1 ring-cyan-500/30 group-hover:ring-cyan-500/50 transition-all">
+              <i data-lucide="piggy-bank" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-cyan-300 transition-colors">+ Add Savings</span>
+          </a>
+
+          <a href="/trips" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(244,63,94,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(244,63,94,0.1) 0%, rgba(236,72,153,0.02) 100%); border: 1px solid rgba(244,63,94,0.15);">
+            <div class="absolute inset-0 bg-gradient-to-r from-rose-500/0 via-rose-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
+            <div class="bg-rose-500/20 p-2.5 rounded-full ring-1 ring-rose-500/30 group-hover:ring-rose-500/50 transition-all">
+              <i data-lucide="plane" class="w-4 h-4 text-rose-400"></i>
+            </div>
+            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-rose-300 transition-colors">+ Add Trip</span>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- Bottom Section: Charts (Sized down per constraints) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+        <!-- Expenses By Category -->
+        <div class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
+          <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
+             Expenses by Category
+          </h2>
+          <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
+            <canvas id="pieChart"></canvas>
           </div>
         </div>
-        <div class="bg-gray-800 p-5 rounded-lg shadow">
-          <h2 class="text-lg font-semibold mb-3">Day-to-Day Expenses</h2>
-          <div class="h-56">
-            <canvas id="barChart" height="220" class="w-full"></canvas>
+
+        <!-- Day-to-Day Expenses -->
+        <div class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
+          <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
+             Day-to-Day Expenses
+          </h2>
+          <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
+            <canvas id="barChart"></canvas>
           </div>
         </div>
       </div>
@@ -165,6 +143,9 @@
     }
   </script>
 
+  <!-- Replace lucide icons rendering script -->
+  
+
   <!-- Chart.js Script -->
   <script>
     const chartData = JSON.parse(document.getElementById("chart-data").textContent);
@@ -176,24 +157,45 @@
     const dailyKeys = chartData.dailyKeys || [];
     const range = chartData.range || {};
 
+    // Rich Palette mapped for Pie
+    const pieColors = ["#14F1D9", "#7C3AED", "#EC4899", "#3B82F6", "#F59E0B", "#10B981"];
+
     // Pie Chart
     const ctxPie = document.getElementById("pieChart").getContext("2d");
     if (categoryLabels.length > 0) {
       const pie = new Chart(ctxPie, {
-        type: "pie",
+        type: "doughnut", // Switched to doughnut for a modern aesthetic similar to the plan but effectively the same visual weight
         data: {
           labels: categoryLabels,
           datasets: [{
             label: "Expenses by Category",
             data: categoryData,
-            backgroundColor: ["#4caf50", "#2196f3", "#ff9800", "#9c27b0", "#f44336"]
+            backgroundColor: pieColors,
+            borderWidth: 0,
+            hoverOffset: 12,
+            hoverBorderWidth: 2,
+            hoverBorderColor: "#ffffff"
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          cutout: '70%', // Sleeker, thinner doughnut ring
+          radius: '85%', // Prevent full-width bleeding
+          layout: { padding: 10 },
           plugins: {
-            legend: { position: "bottom", labels: { boxWidth: 12 } }
+            legend: { 
+              position: "bottom", 
+              labels: { boxWidth: 10, usePointStyle: true, padding: 20, color: "#9CA3AF" } 
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              titleColor: '#fff',
+              bodyColor: '#14F1D9',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              padding: 12
+            }
           },
           onClick: (_, elements) => {
             if (!elements.length) return;
@@ -210,12 +212,23 @@
         }
       });
     } else {
-      ctxPie.canvas.parentNode.innerHTML = "<p class='text-center text-gray-400'>No category data available</p>";
+      ctxPie.canvas.parentNode.innerHTML = "<p class='text-center text-gray-500 italic flex items-center justify-center h-full'>No category data available</p>";
     }
 
     // Bar Chart
     const ctxBar = document.getElementById("barChart").getContext("2d");
     if (dailyLabels.length > 0) {
+      
+      // Dynamic Linear Gradient for sleek bars
+      const barGradient = ctxBar.createLinearGradient(0, 0, 0, 400);
+      barGradient.addColorStop(0, '#7C3AED');   
+      barGradient.addColorStop(1, '#14F1D9');
+
+      // Hover glow gradient
+      const hoverGradient = ctxBar.createLinearGradient(0, 0, 0, 400);
+      hoverGradient.addColorStop(0, '#8B5CF6');   
+      hoverGradient.addColorStop(1, '#2DD4BF');
+
       const bar = new Chart(ctxBar, {
         type: "bar",
         data: {
@@ -223,19 +236,43 @@
           datasets: [{
             label: "Expenses (₹)",
             data: dailyData,
-            backgroundColor: "#03a9f4",
-            maxBarThickness: 18
+            backgroundColor: barGradient,
+            hoverBackgroundColor: hoverGradient,
+            borderRadius: 6,
+            borderSkipped: false,
+            maxBarThickness: 15, // Thinner bars
+            barPercentage: 0.6,  // Add spacing
+            categoryPercentage: 0.7
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: { padding: { top: 10, bottom: 5 } },
           scales: {
-            y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.08)" } },
-            x: { grid: { display: false } }
+            y: { 
+              beginAtZero: true, 
+              grid: { color: "rgba(255,255,255,0.04)" }, 
+              ticks: { color: "#6B7280", font: { size: 11 } },
+              border: { display: false }
+            },
+            x: { 
+              grid: { display: false }, 
+              ticks: { color: "#6B7280", font: { size: 11 } },
+              border: { display: false } 
+            }
           },
           plugins: {
-            legend: { display: false }
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              titleColor: '#fff',
+              bodyColor: '#14F1D9',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false
+            }
           },
           onClick: (e, elements) => {
             if (!elements.length) return;
@@ -250,7 +287,19 @@
         }
       });
     } else {
-      ctxBar.canvas.parentNode.innerHTML = "<p class='text-center text-gray-400'>No daily expense data available</p>";
+      ctxBar.canvas.parentNode.innerHTML = "<p class='text-center text-gray-500 italic flex items-center justify-center h-full'>No daily expense data available</p>";
+    }
+  </script>
+
+  <!-- Global Lucide Icons Injection -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+    });
+    // Fallback if already loaded
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
     }
   </script>
 </body>

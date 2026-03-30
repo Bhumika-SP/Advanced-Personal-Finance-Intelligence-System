@@ -10,36 +10,22 @@
   <style>
     * { font-family: 'Poppins', sans-serif; }
   </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-gray-900 text-white flex h-screen">
+<body class="bg-app text-white flex h-screen">
   <div class="flex min-h-screen w-full">
-  <aside class="w-64 bg-gray-800 p-6 flex flex-col">
-    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
-    <nav class="space-y-4">
-      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
-      <a href="/expenses" class="block hover:text-blue-400">💸 Expenses</a>
-      <a href="/income" class="block hover:text-blue-400">💰 Income</a>
-      <a href="/trips" class="block hover:text-blue-400">✈️ Trips</a>
-      <a href="/savings" class="block hover:text-blue-400">💵 Savings</a>
-      <a href="/budgets" class="block hover:text-blue-400">📊 Budgets</a>
-      <a href="/subscriptions" class="block hover:text-blue-400">🔁 Subscriptions</a>
-      <a href="/chat" class="block hover:text-blue-400">💬 Ask Finances</a>
-      <a href="/alerts" class="block text-blue-400">🔔 Alerts</a>
-      <hr class="border-gray-700 my-4">
-      <a href="/logout" class="block text-red-400 hover:text-red-300">🚪 Logout</a>
-    </nav>
-  </aside>
-  <main class="flex-1 p-8 overflow-y-auto">
+  <%- include('partials/sidebar', { activeTab: 'alerts' }) %>
+  <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-semibold">Alerts</h2>
       <form action="/alerts/read-all" method="POST">
-        <button class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded">Mark all as read</button>
+        <button class="btn-secondary px-3 py-2 rounded">Mark all as read</button>
       </form>
     </div>
     <div class="space-y-3">
       <% if (alerts && alerts.length) { %>
         <% alerts.forEach(a => { %>
-          <div class="p-4 rounded border <%= a.read ? 'border-gray-700 bg-gray-800' : 'border-yellow-600 bg-gray-800' %>">
+          <div class="p-4 rounded border <%= a.read ? 'border-gray-700 bg-card-custom card-hover' : 'border-yellow-600 bg-card-custom card-hover' %>">
             <div class="flex justify-between items-start">
               <div>
                 <div class="font-semibold"><%= a.title %></div>
@@ -48,7 +34,7 @@
               </div>
               <% if (!a.read) { %>
               <form action="/alerts/<%= a._id %>/read" method="POST">
-                <button class="text-sm bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded">Mark as read</button>
+                <button class="text-sm  btn-primary  px-2 py-1 rounded">Mark as read</button>
               </form>
               <% } %>
             </div>
@@ -60,5 +46,20 @@
     </div>
   </main>
   </div>
+
+  
+  
+
+  <!-- Global Lucide Icons Injection -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+    });
+    // Fallback if already loaded
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

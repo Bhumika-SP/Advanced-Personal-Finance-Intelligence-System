@@ -1,0 +1,45 @@
+<% 
+  const currentTab = typeof activeTab !== 'undefined' ? activeTab : '';
+%>
+<aside class="sidebar-container bg-card-custom p-6 flex flex-col z-10 border-r border-gray-800 border-opacity-30 h-full min-h-screen flex-shrink-0 w-64">
+  <div class="sidebar-header mb-8">
+    <h1 class="logo-text font-extrabold text-2xl tracking-tight" style="background: linear-gradient(to right, #22d3ee, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Expensio</h1>
+  </div>
+  
+  <nav class="space-y-4 flex-1">
+    <a href="/dashboard" class="group flex items-center gap-3 <%= currentTab === 'dashboard' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="home" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Home</span>
+    </a>
+    <a href="/expenses" class="group flex items-center gap-3 <%= currentTab === 'expenses' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="wallet" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Expenses</span>
+    </a>
+    <a href="/income" class="group flex items-center gap-3 <%= currentTab === 'income' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="trending-up" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Income</span>
+    </a>
+    <a href="/trips" class="group flex items-center gap-3 <%= currentTab === 'trips' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="plane" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Trips</span>
+    </a>
+    <a href="/savings" class="group flex items-center gap-3 <%= currentTab === 'savings' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="piggy-bank" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Savings</span>
+    </a>
+    <a href="/budgets" class="group flex items-center gap-3 <%= currentTab === 'budgets' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="bar-chart-3" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Budgets</span>
+    </a>
+    <a href="/subscriptions" class="group flex items-center gap-3 <%= currentTab === 'subscriptions' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="credit-card" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Subscriptions</span>
+    </a>
+    <a href="/chat" class="group flex items-center gap-3 <%= currentTab === 'chat' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="message-square" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Ask Finances</span>
+    </a>
+    <a href="/alerts" class="group flex items-center gap-3 <%= currentTab === 'alerts' ? 'sidebar-nav-active' : 'sidebar-nav-item' %>">
+      <i data-lucide="bell" class="w-5 h-5 group-hover:text-cyan-400 transition-colors"></i> <span>Alerts</span>
+    </a>
+  </nav>
+  
+  <div class="mt-auto">
+    <hr class="border-gray-700 my-4 border-opacity-30">
+    <a href="/logout" class="group flex items-center gap-3 sidebar-nav-item text-red-400 hover:text-red-300">
+      <i data-lucide="log-out" class="w-5 h-5 transition-colors"></i> <span>Logout</span>
+    </a>
+  </div>
+</aside>

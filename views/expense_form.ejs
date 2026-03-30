@@ -10,17 +10,12 @@
   <style>
     * { font-family: 'Poppins', sans-serif; }
   </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-gray-900 text-white flex h-screen">
+<body class="bg-app text-white flex h-screen">
 
   <!-- Sidebar -->
-  <aside class="w-64 bg-gray-800 p-6 flex flex-col">
-    <h1 class="text-2xl font-bold mb-8">Expensio</h1>
-    <nav class="space-y-4">
-      <a href="/dashboard" class="block hover:text-blue-400">🏠 Home</a>
-      <a href="/expenses" class="block text-blue-400">💸 Expenses</a>
-    </nav>
-  </aside>
+  <%- include('partials/sidebar', { activeTab: 'expense_form' }) %>
 
   <!-- Main -->
   <main class="flex-1 p-8">
@@ -29,13 +24,13 @@
     <form action="<%= expense ? '/expenses/edit/' + expense._id : '/expenses' %>" method="POST" class="space-y-4">
       <div>
         <label class="block mb-1">Description</label>
-        <input id="description" type="text" name="description" value="<%= expense ? expense.description : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <input id="description" type="text" name="description" value="<%= expense ? expense.description : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
       </div>
 
       <div>
         <label class="block mb-1">Category</label>
         <div class="flex gap-2">
-          <input id="category" type="text" name="category" value="<%= expense ? expense.category : '' %>" required class="flex-1 p-2 rounded bg-gray-800 border border-gray-700">
+          <input id="category" type="text" name="category" value="<%= expense ? expense.category : '' %>" required class="flex-1 p-2 rounded bg-card-custom card-hover border border-gray-700">
           <button id="btn-suggest" type="button" class="bg-purple-600 hover:bg-purple-500 px-3 py-2 rounded">Suggest</button>
         </div>
         <div id="suggestion" class="text-sm text-gray-300 mt-1"></div>
@@ -43,15 +38,15 @@
 
       <div>
         <label class="block mb-1">Amount (₹)</label>
-        <input id="amount" type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <input id="amount" type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
       </div>
 
       <div>
         <label class="block mb-1">Date</label>
-        <input type="date" name="date" value="<%= expense ? expense.date.toISOString().split('T')[0] : '' %>" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        <input type="date" name="date" value="<%= expense ? expense.date.toISOString().split('T')[0] : '' %>" class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
       </div>
 
-      <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded">
+      <button type="submit" class=" btn-primary  px-4 py-2 rounded">
         💾 Save
       </button>
     </form>
@@ -94,5 +89,20 @@
       }
     </script>
   </main>
+
+  
+  
+
+  <!-- Global Lucide Icons Injection -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+    });
+    // Fallback if already loaded
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
 </body>
 </html>

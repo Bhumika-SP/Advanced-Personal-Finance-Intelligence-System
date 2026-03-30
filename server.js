@@ -25,9 +25,10 @@ app.use(helmet({
     directives: {
       "default-src": ["'self'"],
       "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
+      "font-src": ["'self'", "https://fonts.gstatic.com"],
       "img-src": ["'self'", "data:", "https:"],
-      "connect-src": ["'self'", "https://generativelanguage.googleapis.com", "https://"]
+      "connect-src": ["'self'", "https://generativelanguage.googleapis.com", "https://cdn.jsdelivr.net"]
     }
   },
   crossOriginEmbedderPolicy: false
@@ -81,4 +82,9 @@ app.use("/alerts", alertsRoutes);
 // (root handled above)
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server Running on http://localhost:${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`✅ Server Running on http://localhost:${PORT}`));
+}
+
+// Required for Vercel Serverless Functions
+module.exports = app;

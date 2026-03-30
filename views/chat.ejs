@@ -281,9 +281,9 @@
           <div class="message-ai bg-gray-800 rounded-lg p-4 mb-4" id="welcome-message">
             <div class="flex items-start">
               <div class="flex-shrink-0 mr-3">
-                <div class="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
-                  <i class="fas fa-robot text-sm"></i>
-                </div>
+                <div class="h-8 w-8 rounded-full flex items-center justify-center text-gray-900" style="background: var(--accent-purple)">
+                <i data-lucide="bot" class="text-sm"></i>
+              </div>
               </div>
               <div class="flex-1">
                 <div class="text-sm text-gray-400 mb-1">
@@ -516,6 +516,21 @@
         }
         // Add loading state here if needed
       });
+    }
+  </script>
+
+  
+  
+
+  <!-- Global Lucide Icons Injection -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+    });
+    // Fallback if already loaded
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
     }
   </script>
 </body>
