@@ -10,10 +10,10 @@ files.forEach(file => {
   let originalContent = content;
 
   const baseName = file.replace('.ejs', '');
-  
+
   // 1. Replace entire <aside> block with the EJS include
   const asideRegex = /<aside\b[^>]*>[\s\S]*?<\/aside>/;
-  if(asideRegex.test(content)) {
+  if (asideRegex.test(content)) {
     content = content.replace(asideRegex, `<%- include('partials/sidebar', { activeTab: '${baseName}' }) %>`);
   }
 

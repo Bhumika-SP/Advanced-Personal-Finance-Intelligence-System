@@ -292,6 +292,18 @@
   </script>
 
   <!-- Global Lucide Icons Injection -->
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      lucide.createIcons();
+    });
+    // Fallback if already loaded
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  </script>
+
+  <!-- Global Lucide Icons Injection -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
