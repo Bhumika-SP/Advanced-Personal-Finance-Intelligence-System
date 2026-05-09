@@ -1,66 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= saving ? "Edit Savings" : "New Savings" %></title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>
+    <%= saving ? "Edit Savings" : "New Savings" %>
+  </title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
-  </style>  <link rel="stylesheet" href="/style.css">
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
 
   <!-- Sidebar -->
   <%- include('partials/sidebar', { activeTab: 'savings_form' }) %>
 
-  <!-- Main -->
-  <main class="flex-1 p-8">
-    <h2 class="text-2xl font-semibold mb-6"><%= saving ? "Edit Savings" : "New Savings" %></h2>
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <h2 class="text-2xl font-semibold mb-6">
+        <%= saving ? "Edit Savings" : "New Savings" %>
+      </h2>
 
-    <form action="<%= saving ? '/savings/edit/' + saving._id : '/savings' %>" method="POST" class="space-y-4">
-      <div>
-        <label class="block mb-1">Amount (₹)</label>
-        <input type="number" name="amount" value="<%= saving ? saving.amount : '' %>" required
-          class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
+      <form action="<%= saving ? '/savings/edit/' + saving._id : '/savings' %>" method="POST" class="space-y-4">
+        <div>
+          <label class="block mb-1">Amount (₹)</label>
+          <input type="number" name="amount" value="<%= saving ? saving.amount : '' %>" required
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
 
-      <div>
-        <label class="block mb-1">Goal</label>
-        <input type="text" name="goal" value="<%= saving ? saving.goal : '' %>"
-          class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
+        <div>
+          <label class="block mb-1">Goal</label>
+          <input type="text" name="goal" value="<%= saving ? saving.goal : '' %>"
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
 
-      <button type="submit" class=" btn-primary  px-4 py-2 rounded">💾 Save</button>
-    </form>
-  </main>
+        <button type="submit" class=" btn-primary  px-4 py-2 rounded">💾 Save</button>
+      </form>
+    </main>
 
-  
-  
 
-  <!-- Global Lucide Icons Injection -->
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
 
-  <!-- Global Lucide Icons Injection -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
+
+    <!-- Global Lucide Icons Injection -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
+
+    <!-- Global Lucide Icons Injection -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
 </body>
+
 </html>

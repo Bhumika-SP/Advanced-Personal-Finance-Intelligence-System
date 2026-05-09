@@ -22,7 +22,7 @@ function monthRangeFromText(text) {
     const mm = Number(ym[2]);
     const s = new Date(Date.UTC(y, mm - 1, 1));
     const t = new Date(Date.UTC(y, mm, 0, 23, 59, 59));
-    return { start: s, end: t, label: `${y}-${String(mm).padStart(2,'0')}` };
+    return { start: s, end: t, label: `${y}-${String(mm).padStart(2, '0')}` };
   }
   return { start: m, end: e, label: "this month" };
 }
@@ -131,16 +131,16 @@ async function resolveCategory(userId, raw) {
 // router.post("/message", auth, async (req, res) => {
 //   try {
 //     const text = (req.body && req.body.text) || "";
-    
+
 //     // Save user message to database
 //     await ChatMessage.create({ user: req.userId, role: 'user', text });
-    
+
 //     // Get AI response
 //     const reply = await handleQuery(req.userId, text);
-    
+
 //     // Save AI response to database
 //     await ChatMessage.create({ user: req.userId, role: 'assistant', text: reply });
-    
+
 //     // Return JSON response with the AI's reply
 //     res.json({ 
 //       success: true, 
@@ -164,9 +164,9 @@ async function handleQuery(userId, text) {
     const cat = await resolveCategory(userId, catRaw);
 
     // Get all expenses for the time period
-    const expenses = await Expense.find({ 
-      user: new mongoose.Types.ObjectId(userId), 
-      date: { $gte: start, $lte: end } 
+    const expenses = await Expense.find({
+      user: new mongoose.Types.ObjectId(userId),
+      date: { $gte: start, $lte: end }
     }).sort({ date: -1 });
 
     // Handle specific queries
@@ -184,21 +184,21 @@ async function handleQuery(userId, text) {
 
     if (/what (did i spend on|are my expenses for)/i.test(lcText)) {
       if (expenses.length === 0) return `You have no expenses recorded ${label}.`;
-      
+
       const categories = [...new Set(expenses.map(e => e.category))];
       return `Your expenses ${label} are in these categories: ${categories.join(', ')}. ` +
-             `You can ask for more details about any category.`;
+        `You can ask for more details about any category.`;
     }
 
     if (/show (me )?(my )?(recent )?expenses?/i.test(lcText)) {
       const limit = 5; // Show last 5 expenses by default
       const recent = expenses.slice(0, limit);
       if (recent.length === 0) return `No recent expenses found ${label}.`;
-      
-      const formatted = recent.map(e => 
+
+      const formatted = recent.map(e =>
         `${e.date.toLocaleDateString()}: ₹${e.amount.toFixed(2)} on ${e.category}${e.description ? ` (${e.description})` : ''}`
       ).join('\n');
-      
+
       return `Your recent expenses ${label}:\n${formatted}`;
     }
 
@@ -206,14 +206,14 @@ async function handleQuery(userId, text) {
       const match = lcText.match(/how much (?:did i spend|have i spent|was spent) on (.*)/i);
       if (match) {
         const item = match[1].trim();
-        const itemExpenses = expenses.filter(e => 
+        const itemExpenses = expenses.filter(e =>
           e.description && e.description.toLowerCase().includes(item)
         );
-        
+
         if (itemExpenses.length === 0) {
           return `You haven't spent anything on ${item} ${label}.`;
         }
-        
+
         const total = itemExpenses.reduce((sum, e) => sum + e.amount, 0);
         return `You've spent ₹${total.toFixed(2)} on ${item} ${label} across ${itemExpenses.length} transactions.`;
       }
@@ -222,7 +222,7 @@ async function handleQuery(userId, text) {
     // Default response for other queries
     const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
     const categories = [...new Set(expenses.map(e => e.category))];
-    
+
     return `I can help you with your expenses. Here's a summary ${label}:
 - Total spent: ₹${totalSpent.toFixed(2)}
 - Number of transactions: ${expenses.length}

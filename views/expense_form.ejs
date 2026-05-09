@@ -1,120 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= expense ? "Edit Expense" : "New Expense" %></title>
+  <title>
+    <%= expense ? "Edit Expense" : "New Expense" %>
+  </title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
 
   <!-- Sidebar -->
   <%- include('partials/sidebar', { activeTab: 'expense_form' }) %>
 
-  <!-- Main -->
-  <main class="flex-1 p-8">
-    <h2 class="text-2xl font-semibold mb-6"><%= expense ? "Edit Expense" : "New Expense" %></h2>
+    <!-- Main -->
+    <main class="flex-1 p-8">
+      <h2 class="text-2xl font-semibold mb-6">
+        <%= expense ? "Edit Expense" : "New Expense" %>
+      </h2>
 
-    <form action="<%= expense ? '/expenses/edit/' + expense._id : '/expenses' %>" method="POST" class="space-y-4">
-      <div>
-        <label class="block mb-1">Description</label>
-        <input id="description" type="text" name="description" value="<%= expense ? expense.description : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
-
-      <div>
-        <label class="block mb-1">Category</label>
-        <div class="flex gap-2">
-          <input id="category" type="text" name="category" value="<%= expense ? expense.category : '' %>" required class="flex-1 p-2 rounded bg-card-custom card-hover border border-gray-700">
-          <button id="btn-suggest" type="button" class="bg-purple-600 hover:bg-purple-500 px-3 py-2 rounded">Suggest</button>
+      <form action="<%= expense ? '/expenses/edit/' + expense._id : '/expenses' %>" method="POST" class="space-y-4">
+        <div>
+          <label class="block mb-1">Description</label>
+          <input id="description" type="text" name="description" value="<%= expense ? expense.description : '' %>"
+            required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
         </div>
-        <div id="suggestion" class="text-sm text-gray-300 mt-1"></div>
-      </div>
 
-      <div>
-        <label class="block mb-1">Amount (₹)</label>
-        <input id="amount" type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
+        <div>
+          <label class="block mb-1">Category</label>
+          <div class="flex gap-2">
+            <input id="category" type="text" name="category" value="<%= expense ? expense.category : '' %>" required
+              class="flex-1 p-2 rounded bg-card-custom card-hover border border-gray-700">
+            <button id="btn-suggest" type="button"
+              class="bg-purple-600 hover:bg-purple-500 px-3 py-2 rounded">Suggest</button>
+          </div>
+          <div id="suggestion" class="text-sm text-gray-300 mt-1"></div>
+        </div>
 
-      <div>
-        <label class="block mb-1">Date</label>
-        <input type="date" name="date" value="<%= expense ? expense.date.toISOString().split('T')[0] : '' %>" class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
+        <div>
+          <label class="block mb-1">Amount (₹)</label>
+          <input id="amount" type="number" name="amount" value="<%= expense ? expense.amount : '' %>" required
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
 
-      <button type="submit" class=" btn-primary  px-4 py-2 rounded">
-        💾 Save
-      </button>
-    </form>
-    <script>
-      const btn = document.getElementById('btn-suggest');
-      const desc = document.getElementById('description');
-      const amt = document.getElementById('amount');
-      const cat = document.getElementById('category');
-      const sug = document.getElementById('suggestion');
-      if (btn) {
-        btn.addEventListener('click', async () => {
-          const description = desc?.value || '';
-          const amount = amt?.value || '';
-          if (!description && !amount) return;
-          btn.disabled = true;
-          const oldText = btn.textContent;
-          btn.textContent = '...';
-          sug.textContent = '';
-          try {
-            const res = await fetch('/ai/categorize', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ description, amount })
-            });
-            const data = await res.json();
-            if (data && data.category) {
-              cat.value = data.category;
-              const conf = typeof data.confidence === 'number' ? Math.round(data.confidence * 100) : null;
-              sug.textContent = conf !== null ? `Suggested: ${data.category} (${conf}%)` : `Suggested: ${data.category}`;
-            } else {
-              sug.textContent = 'No suggestion available.';
+        <div>
+          <label class="block mb-1">Date</label>
+          <input type="date" name="date" value="<%= expense ? expense.date.toISOString().split('T')[0] : '' %>"
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
+
+        <button type="submit" class=" btn-primary  px-4 py-2 rounded">
+          💾 Save
+        </button>
+      </form>
+      <script>
+        const btn = document.getElementById('btn-suggest');
+        const desc = document.getElementById('description');
+        const amt = document.getElementById('amount');
+        const cat = document.getElementById('category');
+        const sug = document.getElementById('suggestion');
+        if (btn) {
+          btn.addEventListener('click', async () => {
+            const description = desc?.value || '';
+            const amount = amt?.value || '';
+            if (!description && !amount) return;
+            btn.disabled = true;
+            const oldText = btn.textContent;
+            btn.textContent = '...';
+            sug.textContent = '';
+            try {
+              const res = await fetch('/ai/categorize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description, amount })
+              });
+              const data = await res.json();
+              if (data && data.category) {
+                cat.value = data.category;
+                const conf = typeof data.confidence === 'number' ? Math.round(data.confidence * 100) : null;
+                sug.textContent = conf !== null ? `Suggested: ${data.category} (${conf}%)` : `Suggested: ${data.category}`;
+              } else {
+                sug.textContent = 'No suggestion available.';
+              }
+            } catch (e) {
+              sug.textContent = 'Suggestion failed.';
+            } finally {
+              btn.disabled = false;
+              btn.textContent = oldText;
             }
-          } catch (e) {
-            sug.textContent = 'Suggestion failed.';
-          } finally {
-            btn.disabled = false;
-            btn.textContent = oldText;
-          }
-        });
+          });
+        }
+      </script>
+    </main>
+
+
+
+
+    <!-- Global Lucide Icons Injection -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
       }
     </script>
-  </main>
 
-  
-  
-
-  <!-- Global Lucide Icons Injection -->
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
-
-  <!-- Global Lucide Icons Injection -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
+    <!-- Global Lucide Icons Injection -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
 </body>
+
 </html>

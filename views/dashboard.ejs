@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Dashboard</title>
@@ -10,125 +11,164 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
-  
+
 </head>
+
 <body class="bg-app text-white flex h-screen">
   <div class="flex min-h-screen w-full">
-    
+
     <!-- ✅ Sidebar -->
     <%- include('partials/sidebar', { activeTab: 'dashboard' }) %>
 
-    <!-- ✅ Main Content -->
-    <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100 flex flex-col gap-6 w-full pattern-bg">
-      
-      <!-- Top Section: Categories & Anomalies -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <!-- Top Categories -->
-        <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
-          <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
-             Top Categories
-          </h2>
-          <ul class="space-y-3 flex-1">
-            <% if (insights && insights.topCategories && insights.topCategories.length) { %>
-              <% insights.topCategories.forEach(item => { %>
-                <li class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
-                  <span class="text-gray-400"><%= item.name %></span>
-                  <span class="font-semibold text-white">₹<%= item.total %></span>
-                </li>
-              <% }) %>
-            <% } else { %>
-              <li class="text-gray-500 italic">No data</li>
-            <% } %>
-          </ul>
-        </div>
-        
-        <!-- Anomalies -->
-        <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
-          <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
-             Anomalies
-          </h2>
-          <ul class="space-y-3 flex-1">
-            <% if (insights && insights.anomalies && insights.anomalies.length) { %>
-              <% insights.anomalies.forEach(a => { %>
-                <li class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
-                  <span class="text-gray-400"><%= a.label %></span>
-                  <span class="font-semibold text-rose-400">₹<%= a.amount %></span>
-                </li>
-              <% }) %>
-            <% } else { %>
-              <li class="text-gray-500 italic">No anomalies detected</li>
-            <% } %>
-          </ul>
-        </div>
-      </div>
+      <!-- ✅ Main Content -->
+      <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100 flex flex-col gap-6 w-full pattern-bg">
 
-      <!-- Quick Access Section -->
-      <div class="bg-card-custom p-6 rounded-2xl w-full shadow-lg">
-        <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-5">Quick Access</h3>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          
-          <a href="/expenses" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(236,72,153,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(236,72,153,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(236,72,153,0.15);">
-            <div class="absolute inset-0 bg-gradient-to-r from-pink-500/0 via-pink-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
-            <div class="bg-pink-500/20 p-2.5 rounded-full ring-1 ring-pink-500/30 group-hover:ring-pink-500/50 transition-all">
-              <i data-lucide="wallet" class="w-4 h-4 text-pink-400"></i>
-            </div>
-            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-pink-300 transition-colors">+ Add Expense</span>
-          </a>
+        <!-- Top Section: Categories & Anomalies -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          <!-- Top Categories -->
+          <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
+            <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
+              Top Categories
+            </h2>
+            <ul class="space-y-3 flex-1">
+              <% if (insights && insights.topCategories && insights.topCategories.length) { %>
+                <% insights.topCategories.forEach(item=> { %>
+                  <li
+                    class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
+                    <span class="text-gray-400">
+                      <%= item.name %>
+                    </span>
+                    <span class="font-semibold text-white">₹<%= item.total %></span>
+                  </li>
+                  <% }) %>
+                    <% } else { %>
+                      <li class="text-gray-500 italic">No data</li>
+                      <% } %>
+            </ul>
+          </div>
 
-          <a href="/income" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(124,58,237,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(124,58,237,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(124,58,237,0.15);">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
-            <div class="bg-purple-500/20 p-2.5 rounded-full ring-1 ring-purple-500/30 group-hover:ring-purple-500/50 transition-all">
-               <i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i>
-            </div>
-            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-purple-300 transition-colors">+ Add Income</span>
-          </a>
-
-          <a href="/savings" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(20,241,217,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(20,241,217,0.1) 0%, rgba(124,58,237,0.02) 100%); border: 1px solid rgba(20,241,217,0.15);">
-            <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
-            <div class="bg-cyan-500/20 p-2.5 rounded-full ring-1 ring-cyan-500/30 group-hover:ring-cyan-500/50 transition-all">
-              <i data-lucide="piggy-bank" class="w-4 h-4 text-cyan-400"></i>
-            </div>
-            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-cyan-300 transition-colors">+ Add Savings</span>
-          </a>
-
-          <a href="/trips" class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(244,63,94,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group" style="background: linear-gradient(145deg, rgba(244,63,94,0.1) 0%, rgba(236,72,153,0.02) 100%); border: 1px solid rgba(244,63,94,0.15);">
-            <div class="absolute inset-0 bg-gradient-to-r from-rose-500/0 via-rose-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full"></div>
-            <div class="bg-rose-500/20 p-2.5 rounded-full ring-1 ring-rose-500/30 group-hover:ring-rose-500/50 transition-all">
-              <i data-lucide="plane" class="w-4 h-4 text-rose-400"></i>
-            </div>
-            <span class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-rose-300 transition-colors">+ Add Trip</span>
-          </a>
-
-        </div>
-      </div>
-
-      <!-- Bottom Section: Charts (Sized down per constraints) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-        <!-- Expenses By Category -->
-        <div class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
-          <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
-             Expenses by Category
-          </h2>
-          <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
-            <canvas id="pieChart"></canvas>
+          <!-- Anomalies -->
+          <div class="bg-card-custom card-hover p-6 rounded-2xl flex flex-col h-full shadow-lg">
+            <h2 class="text-lg font-semibold mb-4 text-gray-100 flex items-center gap-2">
+              Anomalies
+            </h2>
+            <ul class="space-y-3 flex-1">
+              <% if (insights && insights.anomalies && insights.anomalies.length) { %>
+                <% insights.anomalies.forEach(a=> { %>
+                  <li
+                    class="flex justify-between items-center border-b border-gray-700 border-opacity-20 pb-2 last:border-0 last:pb-0">
+                    <span class="text-gray-400">
+                      <%= a.label %>
+                    </span>
+                    <span class="font-semibold text-rose-400">₹<%= a.amount %></span>
+                  </li>
+                  <% }) %>
+                    <% } else { %>
+                      <li class="text-gray-500 italic">No anomalies detected</li>
+                      <% } %>
+            </ul>
           </div>
         </div>
 
-        <!-- Day-to-Day Expenses -->
-        <div class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
-          <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
-             Day-to-Day Expenses
-          </h2>
-          <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
-            <canvas id="barChart"></canvas>
+        <!-- Quick Access Section -->
+        <div class="bg-card-custom p-6 rounded-2xl w-full shadow-lg">
+          <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-5">Quick Access</h3>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <a href="/expenses"
+              class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(236,72,153,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group"
+              style="background: linear-gradient(145deg, rgba(236,72,153,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(236,72,153,0.15);">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-pink-500/0 via-pink-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full">
+              </div>
+              <div
+                class="bg-pink-500/20 p-2.5 rounded-full ring-1 ring-pink-500/30 group-hover:ring-pink-500/50 transition-all">
+                <i data-lucide="wallet" class="w-4 h-4 text-pink-400"></i>
+              </div>
+              <span
+                class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-pink-300 transition-colors">+
+                Add Expense</span>
+            </a>
+
+            <a href="/income"
+              class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(124,58,237,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group"
+              style="background: linear-gradient(145deg, rgba(124,58,237,0.1) 0%, rgba(20,241,217,0.02) 100%); border: 1px solid rgba(124,58,237,0.15);">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full">
+              </div>
+              <div
+                class="bg-purple-500/20 p-2.5 rounded-full ring-1 ring-purple-500/30 group-hover:ring-purple-500/50 transition-all">
+                <i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i>
+              </div>
+              <span
+                class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-purple-300 transition-colors">+
+                Add Income</span>
+            </a>
+
+            <a href="/savings"
+              class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(20,241,217,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group"
+              style="background: linear-gradient(145deg, rgba(20,241,217,0.1) 0%, rgba(124,58,237,0.02) 100%); border: 1px solid rgba(20,241,217,0.15);">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full">
+              </div>
+              <div
+                class="bg-cyan-500/20 p-2.5 rounded-full ring-1 ring-cyan-500/30 group-hover:ring-cyan-500/50 transition-all">
+                <i data-lucide="piggy-bank" class="w-4 h-4 text-cyan-400"></i>
+              </div>
+              <span
+                class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-cyan-300 transition-colors">+
+                Add Savings</span>
+            </a>
+
+            <a href="/trips"
+              class="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(244,63,94,0.3)] bg-opacity-20 backdrop-blur-md relative overflow-hidden group"
+              style="background: linear-gradient(145deg, rgba(244,63,94,0.1) 0%, rgba(236,72,153,0.02) 100%); border: 1px solid rgba(244,63,94,0.15);">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-rose-500/0 via-rose-500/10 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out -translate-x-full">
+              </div>
+              <div
+                class="bg-rose-500/20 p-2.5 rounded-full ring-1 ring-rose-500/30 group-hover:ring-rose-500/50 transition-all">
+                <i data-lucide="plane" class="w-4 h-4 text-rose-400"></i>
+              </div>
+              <span
+                class="font-semibold text-gray-200 text-sm whitespace-nowrap group-hover:text-rose-300 transition-colors">+
+                Add Trip</span>
+            </a>
+
           </div>
         </div>
-      </div>
 
-    </main>
+        <!-- Bottom Section: Charts (Sized down per constraints) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+          <!-- Expenses By Category -->
+          <div
+            class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
+            <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
+              Expenses by Category
+            </h2>
+            <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
+              <canvas id="pieChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Day-to-Day Expenses -->
+          <div
+            class="bg-card-custom card-hover p-6 md:p-8 rounded-2xl flex flex-col h-full shadow-lg border border-gray-800/50 w-full">
+            <h2 class="text-lg font-semibold mb-2 text-gray-200 text-center w-full">
+              Day-to-Day Expenses
+            </h2>
+            <div class="relative w-full mx-auto" style="max-width: 450px; height: 300px; padding: 20px;">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </main>
   </div>
 
   <!-- ✅ Safe JSON data -->
@@ -144,7 +184,7 @@
   </script>
 
   <!-- Replace lucide icons rendering script -->
-  
+
 
   <!-- Chart.js Script -->
   <script>
@@ -184,9 +224,9 @@
           radius: '85%', // Prevent full-width bleeding
           layout: { padding: 10 },
           plugins: {
-            legend: { 
-              position: "bottom", 
-              labels: { boxWidth: 10, usePointStyle: true, padding: 20, color: "#9CA3AF" } 
+            legend: {
+              position: "bottom",
+              labels: { boxWidth: 10, usePointStyle: true, padding: 20, color: "#9CA3AF" }
             },
             tooltip: {
               backgroundColor: 'rgba(15, 23, 42, 0.9)',
@@ -204,8 +244,8 @@
             const params = new URLSearchParams();
             if (cat) params.set('category', cat);
             if (range && range.start && range.end) {
-              params.set('startDate', new Date(range.start).toISOString().slice(0,10));
-              params.set('endDate', new Date(range.end).toISOString().slice(0,10));
+              params.set('startDate', new Date(range.start).toISOString().slice(0, 10));
+              params.set('endDate', new Date(range.end).toISOString().slice(0, 10));
             }
             window.location.href = `/expenses?${params.toString()}`;
           }
@@ -218,15 +258,15 @@
     // Bar Chart
     const ctxBar = document.getElementById("barChart").getContext("2d");
     if (dailyLabels.length > 0) {
-      
+
       // Dynamic Linear Gradient for sleek bars
       const barGradient = ctxBar.createLinearGradient(0, 0, 0, 400);
-      barGradient.addColorStop(0, '#7C3AED');   
+      barGradient.addColorStop(0, '#7C3AED');
       barGradient.addColorStop(1, '#14F1D9');
 
       // Hover glow gradient
       const hoverGradient = ctxBar.createLinearGradient(0, 0, 0, 400);
-      hoverGradient.addColorStop(0, '#8B5CF6');   
+      hoverGradient.addColorStop(0, '#8B5CF6');
       hoverGradient.addColorStop(1, '#2DD4BF');
 
       const bar = new Chart(ctxBar, {
@@ -250,16 +290,16 @@
           maintainAspectRatio: false,
           layout: { padding: { top: 10, bottom: 5 } },
           scales: {
-            y: { 
-              beginAtZero: true, 
-              grid: { color: "rgba(255,255,255,0.04)" }, 
+            y: {
+              beginAtZero: true,
+              grid: { color: "rgba(255,255,255,0.04)" },
               ticks: { color: "#6B7280", font: { size: 11 } },
               border: { display: false }
             },
-            x: { 
-              grid: { display: false }, 
+            x: {
+              grid: { display: false },
               ticks: { color: "#6B7280", font: { size: 11 } },
-              border: { display: false } 
+              border: { display: false }
             }
           },
           plugins: {
@@ -292,9 +332,9 @@
   </script>
 
   <!-- Global Lucide Icons Injection -->
-  
+
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -306,7 +346,7 @@
   <!-- Global Lucide Icons Injection -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -315,4 +355,5 @@
     }
   </script>
 </body>
+
 </html>

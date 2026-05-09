@@ -1,71 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= budget ? "Edit Budget" : "New Budget" %></title>
+  <title>
+    <%= budget ? "Edit Budget" : "New Budget" %>
+  </title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
   <%- include('partials/sidebar', { activeTab: 'budget_form' }) %>
-  <main class="flex-1 p-8">
-    <h2 class="text-2xl font-semibold mb-6"><%= budget ? "Edit Budget" : "New Budget" %></h2>
-    <form action="<%= budget ? ('/budgets/edit/' + budget._id) : '/budgets' %>" method="POST" class="space-y-4 max-w-lg">
-      <div>
-        <label class="block mb-1">Category</label>
-        <input type="text" name="category" value="<%= budget ? budget.category : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
-      <div>
-        <label class="block mb-1">Amount (₹)</label>
-        <input type="number" name="amount" value="<%= budget ? budget.amount : '' %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
-      <div>
-        <label class="block mb-1">Period</label>
-        <input type="month" name="period" value="<%= budget ? budget.period : (period || '') %>" required class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
-      </div>
-      <div class="flex items-center gap-4">
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="rollover" <%= budget && budget.rollover ? 'checked' : '' %> class="form-checkbox"> Rollover
-        </label>
-        <label class="inline-flex items-center gap-2">
-          <input type="checkbox" name="alertsOn" <%= (budget ? budget.alertsOn : true) ? 'checked' : '' %> class="form-checkbox"> Alerts On
-        </label>
-      </div>
-      <button type="submit" class=" btn-primary  px-4 py-2 rounded">Save</button>
-    </form>
-  </main>
+    <main class="flex-1 p-8">
+      <h2 class="text-2xl font-semibold mb-6">
+        <%= budget ? "Edit Budget" : "New Budget" %>
+      </h2>
+      <form action="<%= budget ? ('/budgets/edit/' + budget._id) : '/budgets' %>" method="POST"
+        class="space-y-4 max-w-lg">
+        <div>
+          <label class="block mb-1">Category</label>
+          <input type="text" name="category" value="<%= budget ? budget.category : '' %>" required
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
+        <div>
+          <label class="block mb-1">Amount (₹)</label>
+          <input type="number" name="amount" value="<%= budget ? budget.amount : '' %>" required
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
+        <div>
+          <label class="block mb-1">Period</label>
+          <input type="month" name="period" value="<%= budget ? budget.period : (period || '') %>" required
+            class="w-full p-2 rounded bg-card-custom card-hover border border-gray-700">
+        </div>
+        <div class="flex items-center gap-4">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="rollover" <%=budget && budget.rollover ? 'checked' : '' %>
+            class="form-checkbox"> Rollover
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="alertsOn" <%=(budget ? budget.alertsOn : true) ? 'checked' : '' %>
+            class="form-checkbox"> Alerts On
+          </label>
+        </div>
+        <button type="submit" class=" btn-primary  px-4 py-2 rounded">Save</button>
+      </form>
+    </main>
 
-  
-  
 
-  <!-- Global Lucide Icons Injection -->
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
 
-  <!-- Global Lucide Icons Injection -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
+
+    <!-- Global Lucide Icons Injection -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
+
+    <!-- Global Lucide Icons Injection -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
 </body>
+
 </html>

@@ -1,80 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title><%= trip ? "Edit Trip" : "Add Trip" %></title>
+  <title>
+    <%= trip ? "Edit Trip" : "Add Trip" %>
+  </title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
 
   <!-- Sidebar -->
   <%- include('partials/sidebar', { activeTab: 'trips_form' }) %>
 
-  <!-- Main -->
-  <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
-    <h2 class="text-2xl font-semibold mb-6"><%= trip ? "Edit Trip" : "Add Trip" %></h2>
+    <!-- Main -->
+    <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
+      <h2 class="text-2xl font-semibold mb-6">
+        <%= trip ? "Edit Trip" : "Add Trip" %>
+      </h2>
 
-    <form action="<%= trip ? '/trips/edit/' + trip._id : '/trips' %>" method="POST" class="space-y-4">
-      <div>
-        <label class="block">Title</label>
-        <input type="text" name="title" value="<%= trip ? trip.title : '' %>" required class="w-full p-2 rounded text-black">
-      </div>
-      <div>
-        <label class="block">Destination</label>
-        <input type="text" name="destination" value="<%= trip ? trip.destination : '' %>" required class="w-full p-2 rounded text-black">
-      </div>
-      <div>
-        <label class="block">Budget</label>
-        <input type="number" name="budget" value="<%= trip ? trip.budget : '' %>" required class="w-full p-2 rounded text-black">
-      </div>
-      <div>
-        <label class="block">Start Date</label>
-        <input type="date" name="startDate" value="<%= trip ? trip.startDate.toISOString().split('T')[0] : '' %>" required class="w-full p-2 rounded text-black">
-      </div>
-      <div>
-        <label class="block">End Date</label>
-        <input type="date" name="endDate" value="<%= trip ? trip.endDate.toISOString().split('T')[0] : '' %>" required class="w-full p-2 rounded text-black">
-      </div>
+      <form action="<%= trip ? '/trips/edit/' + trip._id : '/trips' %>" method="POST" class="space-y-4">
+        <div>
+          <label class="block">Title</label>
+          <input type="text" name="title" value="<%= trip ? trip.title : '' %>" required
+            class="w-full p-2 rounded text-black">
+        </div>
+        <div>
+          <label class="block">Destination</label>
+          <input type="text" name="destination" value="<%= trip ? trip.destination : '' %>" required
+            class="w-full p-2 rounded text-black">
+        </div>
+        <div>
+          <label class="block">Budget</label>
+          <input type="number" name="budget" value="<%= trip ? trip.budget : '' %>" required
+            class="w-full p-2 rounded text-black">
+        </div>
+        <div>
+          <label class="block">Start Date</label>
+          <input type="date" name="startDate" value="<%= trip ? trip.startDate.toISOString().split('T')[0] : '' %>"
+            required class="w-full p-2 rounded text-black">
+        </div>
+        <div>
+          <label class="block">End Date</label>
+          <input type="date" name="endDate" value="<%= trip ? trip.endDate.toISOString().split('T')[0] : '' %>" required
+            class="w-full p-2 rounded text-black">
+        </div>
 
-      <button type="submit" class=" btn-primary  px-4 py-2 rounded-lg">
-        <%= trip ? "Update Trip" : "Add Trip" %>
-      </button>
-    </form>
-  </main>
+        <button type="submit" class=" btn-primary  px-4 py-2 rounded-lg">
+          <%= trip ? "Update Trip" : "Add Trip" %>
+        </button>
+      </form>
+    </main>
 
 
-  
-  
 
-  <!-- Global Lucide Icons Injection -->
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
 
-  <!-- Global Lucide Icons Injection -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      lucide.createIcons();
-    });
-    // Fallback if already loaded
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-  </script>
+
+    <!-- Global Lucide Icons Injection -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
+
+    <!-- Global Lucide Icons Injection -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        lucide.createIcons();
+      });
+      // Fallback if already loaded
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    </script>
 </body>
+
 </html>

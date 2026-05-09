@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Alerts</title>
@@ -8,52 +9,62 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
   <div class="flex min-h-screen w-full">
-  <%- include('partials/sidebar', { activeTab: 'alerts' }) %>
-  <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-semibold">Alerts</h2>
-      <form action="/alerts/read-all" method="POST">
-        <button class="btn-secondary px-3 py-2 rounded">Mark all as read</button>
-      </form>
-    </div>
-    <div class="space-y-3">
-      <% if (alerts && alerts.length) { %>
-        <% alerts.forEach(a => { %>
-          <div class="p-4 rounded border <%= a.read ? 'border-gray-700 bg-card-custom card-hover' : 'border-yellow-600 bg-card-custom card-hover' %>">
-            <div class="flex justify-between items-start">
-              <div>
-                <div class="font-semibold"><%= a.title %></div>
-                <div class="text-sm text-gray-300"><%= a.message %></div>
-                <div class="text-xs text-gray-400 mt-1"><%= new Date(a.createdAt).toLocaleString() %></div>
+    <%- include('partials/sidebar', { activeTab: 'alerts' }) %>
+      <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-semibold">Alerts</h2>
+          <form action="/alerts/read-all" method="POST">
+            <button class="btn-secondary px-3 py-2 rounded">Mark all as read</button>
+          </form>
+        </div>
+        <div class="space-y-3">
+          <% if (alerts && alerts.length) { %>
+            <% alerts.forEach(a=> { %>
+              <div
+                class="p-4 rounded border <%= a.read ? 'border-gray-700 bg-card-custom card-hover' : 'border-yellow-600 bg-card-custom card-hover' %>">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="font-semibold">
+                      <%= a.title %>
+                    </div>
+                    <div class="text-sm text-gray-300">
+                      <%= a.message %>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-1">
+                      <%= new Date(a.createdAt).toLocaleString() %>
+                    </div>
+                  </div>
+                  <% if (!a.read) { %>
+                    <form action="/alerts/<%= a._id %>/read" method="POST">
+                      <button class="text-sm  btn-primary  px-2 py-1 rounded">Mark as read</button>
+                    </form>
+                    <% } %>
+                </div>
               </div>
-              <% if (!a.read) { %>
-              <form action="/alerts/<%= a._id %>/read" method="POST">
-                <button class="text-sm  btn-primary  px-2 py-1 rounded">Mark as read</button>
-              </form>
-              <% } %>
-            </div>
-          </div>
-        <% }) %>
-      <% } else { %>
-        <div class="text-gray-400">No alerts yet.</div>
-      <% } %>
-    </div>
-  </main>
+              <% }) %>
+                <% } else { %>
+                  <div class="text-gray-400">No alerts yet.</div>
+                  <% } %>
+        </div>
+      </main>
   </div>
 
-  
-  
+
+
 
   <!-- Global Lucide Icons Injection -->
-  
+
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -65,7 +76,7 @@
   <!-- Global Lucide Icons Injection -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -74,4 +85,5 @@
     }
   </script>
 </body>
+
 </html>

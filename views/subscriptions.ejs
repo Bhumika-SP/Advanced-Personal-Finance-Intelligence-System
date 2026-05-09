@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Subscriptions</title>
@@ -8,81 +9,95 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Poppins', sans-serif; }
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body class="bg-app text-white flex h-screen">
   <div class="flex min-h-screen w-full">
-  <%- include('partials/sidebar', { activeTab: 'subscriptions' }) %>
-  <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
-    <h2 class="text-2xl font-semibold mb-6">Detected Subscriptions (last 6 months)</h2>
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-card-custom card-hover rounded">
-        <thead>
-          <tr class="text-gray-300 sticky top-0 z-20">
-            <th class="py-3 px-4 cursor-pointer" data-sort="text">Vendor</th>
-            <th class="py-3 px-4 cursor-pointer" data-sort="text">Category</th>
-            <th class="py-3 px-4 cursor-pointer" data-sort="number">Avg Amount</th>
-            <th class="py-3 px-4 cursor-pointer" data-sort="number">Charges</th>
-            <th class="py-3 px-4 cursor-pointer" data-sort="date">Last</th>
-            <th class="py-3 px-4 cursor-pointer" data-sort="date">Next est.</th>
-          </tr>
-        </thead>
-        <tbody id="subs-tbody">
-          <% if (subs && subs.length) { %>
-            <% subs.forEach((s, i) => { %>
-              <tr class="border-t border-gray-700 table-row-hover"
-                  data-vendor="<%= s.vendor %>"
-                  data-cat="<%= s.category %>"
-                  data-avg="<%= s.avgAmount %>"
-                  data-count="<%= s.count %>"
-                  data-last="<%= new Date(s.lastDate).toISOString().slice(0,10) %>"
-                  data-next="<%= new Date(s.nextDate).toISOString().slice(0,10) %>">
-                <td class="py-3 px-4"><%= s.vendor %></td>
-                <td class="py-3 px-4"><%= s.category %></td>
-                <td class="py-3 px-4">₹<%= s.avgAmount %></td>
-                <td class="py-3 px-4"><%= s.count %></td>
-                <td class="py-3 px-4"><%= new Date(s.lastDate).toISOString().slice(0,10) %></td>
-                <td class="py-3 px-4"><%= new Date(s.nextDate).toISOString().slice(0,10) %></td>
+    <%- include('partials/sidebar', { activeTab: 'subscriptions' }) %>
+      <main class="flex-1 p-8 overflow-y-auto animate-fade-slide-up delay-100">
+        <h2 class="text-2xl font-semibold mb-6">Detected Subscriptions (last 6 months)</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-card-custom card-hover rounded">
+            <thead>
+              <tr class="text-gray-300 sticky top-0 z-20">
+                <th class="py-3 px-4 cursor-pointer" data-sort="text">Vendor</th>
+                <th class="py-3 px-4 cursor-pointer" data-sort="text">Category</th>
+                <th class="py-3 px-4 cursor-pointer" data-sort="number">Avg Amount</th>
+                <th class="py-3 px-4 cursor-pointer" data-sort="number">Charges</th>
+                <th class="py-3 px-4 cursor-pointer" data-sort="date">Last</th>
+                <th class="py-3 px-4 cursor-pointer" data-sort="date">Next est.</th>
               </tr>
-            <% }) %>
-          <% } else { %>
-            <tr><td colspan="6" class="py-4 text-center text-gray-400">No recurring subscriptions detected yet. Add more data and check back.</td></tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
-    <script>
-      // Sorting
-      const tbody = document.getElementById('subs-tbody');
-      function val(tr, key) { return tr.getAttribute(key) || ''; }
-      function sortBy(key, type, asc) {
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort((a,b)=>{
-          const va = val(a, key), vb = val(b, key);
-          if (type==='number') return (Number(va)-Number(vb))*(asc?1:-1);
-          if (type==='date') return (new Date(va)-new Date(vb))*(asc?1:-1);
-          return String(va).localeCompare(String(vb))*(asc?1:-1);
-        });
-        rows.forEach(r=>tbody.appendChild(r));
-      }
-      const map = ['data-vendor','data-cat','data-avg','data-count','data-last','data-next'];
-      document.querySelectorAll('th[data-sort]').forEach((th,i)=>{
-        let asc = true;
-        th.addEventListener('click',()=>{ sortBy(map[i], th.getAttribute('data-sort'), asc); asc=!asc; });
-      });
-    </script>
-  </main>
+            </thead>
+            <tbody id="subs-tbody">
+              <% if (subs && subs.length) { %>
+                <% subs.forEach((s, i)=> { %>
+                  <tr class="border-t border-gray-700 table-row-hover" data-vendor="<%= s.vendor %>"
+                    data-cat="<%= s.category %>" data-avg="<%= s.avgAmount %>" data-count="<%= s.count %>"
+                    data-last="<%= new Date(s.lastDate).toISOString().slice(0,10) %>"
+                    data-next="<%= new Date(s.nextDate).toISOString().slice(0,10) %>">
+                    <td class="py-3 px-4">
+                      <%= s.vendor %>
+                    </td>
+                    <td class="py-3 px-4">
+                      <%= s.category %>
+                    </td>
+                    <td class="py-3 px-4">₹<%= s.avgAmount %>
+                    </td>
+                    <td class="py-3 px-4">
+                      <%= s.count %>
+                    </td>
+                    <td class="py-3 px-4">
+                      <%= new Date(s.lastDate).toISOString().slice(0,10) %>
+                    </td>
+                    <td class="py-3 px-4">
+                      <%= new Date(s.nextDate).toISOString().slice(0,10) %>
+                    </td>
+                  </tr>
+                  <% }) %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="6" class="py-4 text-center text-gray-400">No recurring subscriptions detected yet.
+                          Add more data and check back.</td>
+                      </tr>
+                      <% } %>
+            </tbody>
+          </table>
+        </div>
+        <script>
+          // Sorting
+          const tbody = document.getElementById('subs-tbody');
+          function val(tr, key) { return tr.getAttribute(key) || ''; }
+          function sortBy(key, type, asc) {
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+              const va = val(a, key), vb = val(b, key);
+              if (type === 'number') return (Number(va) - Number(vb)) * (asc ? 1 : -1);
+              if (type === 'date') return (new Date(va) - new Date(vb)) * (asc ? 1 : -1);
+              return String(va).localeCompare(String(vb)) * (asc ? 1 : -1);
+            });
+            rows.forEach(r => tbody.appendChild(r));
+          }
+          const map = ['data-vendor', 'data-cat', 'data-avg', 'data-count', 'data-last', 'data-next'];
+          document.querySelectorAll('th[data-sort]').forEach((th, i) => {
+            let asc = true;
+            th.addEventListener('click', () => { sortBy(map[i], th.getAttribute('data-sort'), asc); asc = !asc; });
+          });
+        </script>
+      </main>
   </div>
 
-  
-  
+
+
 
   <!-- Global Lucide Icons Injection -->
-  
+
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -94,7 +109,7 @@
   <!-- Global Lucide Icons Injection -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       lucide.createIcons();
     });
     // Fallback if already loaded
@@ -103,4 +118,5 @@
     }
   </script>
 </body>
+
 </html>
