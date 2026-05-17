@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src='https://unpkg.com/lucide@latest'></script>
+</head>
+
+<body>
+  <div id='test'>
+    <i data-lucide='bot'></i>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const el = document.getElementById('test');
+        lucide.createIcons({ root: el });
+        console.log('SUCCESS');
+      } catch (e) {
+        console.error('ERROR:', e.message);
+      }
+    });
+  </script>
+</body>
+
+</html>

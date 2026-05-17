@@ -53,4 +53,96 @@ If candidates are provided, prefer one of them if reasonable. Keep category shor
   }
 }
 
-module.exports = { suggestCategory };
+function fallbackChatResponse(prompt, context) {
+  const p = prompt.toLowerCase();
+
+  if (p.includes('spend') || p.includes('spent') || p.includes('expenses')) {
+    return `Based on your recent data, you have spent ₹${context.totalExpenses || 0} across ${context.expenseCount || 0} transactions this month. Your highest spending category is ${context.topCategory || 'N/A'}.`;
+  }
+  if (p.includes('save') || p.includes('savings')) {
+    return `You have saved ₹${context.totalSavings || 0} recently. Setting aside a consistent percentage of your income (which is ₹${context.totalIncome || 0}) can help improve your savings ratio.`;
+  }
+  if (p.includes('budget')) {
+    return context.budgetAlerts && context.budgetAlerts.length > 0
+      ? `Warning: You are nearing or exceeding your budget in: ${context.budgetAlerts.join(', ')}.`
+      : `Your budgets look healthy! You have ${context.budgetCount || 0} active budgets this month.`;
+  }
+  if (p.includes('category') || p.includes('categories') || p.includes('top')) {
+    return `Your top spending category is ${context.topCategory || 'N/A'}. Keep an eye on recurring expenses in this category to optimize your budget.`;
+  }
+
+  return `I'm currently operating in offline mode. Your monthly spending is ₹${context.totalExpenses || 0} and your top category is ${context.topCategory || 'N/A'}. How else can I help?`;
+}
+
+async function generateChatResponse(prompt, context = {}, history = []) {
+  const sanitizedPrompt = String(prompt).trim().slice(0, 500); // Sanitize and limit length
+
+  if (!genAI) {
+    return fallbackChatResponse(sanitizedPrompt, context);
+  }
+
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  // Build a token-efficient context string
+  const contextStr = JSON.stringify({
+    spend: context.totalExpenses || 0,
+    income: context.totalIncome || 0,
+    saved: context.totalSavings || 0,
+    topCat: context.topCategory || "None",
+    budgets: context.budgetCount || 0,
+    alerts: context.budgetAlerts || []
+  });
+
+  const systemPrompt = `You are Expensio AI, a personal finance assistant. 
+Be concise, helpful, and professional. Use ₹ for currency.
+User Data Context: ${contextStr}
+Do not mention that you are an AI unless asked. Answer the user's question directly based ONLY on their context.`;
+
+  // Format history for Gemini
+  const contents = [];
+
+  // Filter history: remove the last user message because it's the current prompt,
+  // which we append manually with system context. Also ensures alternating roles.
+  let validHistory = history.filter(msg => msg.role === 'user' || msg.role === 'assistant');
+  if (validHistory.length > 0 && validHistory[validHistory.length - 1].role === 'user') {
+    validHistory.pop(); // Remove the current prompt that was just saved to DB
+  }
+
+  // Add history
+  validHistory.slice(-4).forEach(msg => { // Last 2 turns (4 messages)
+    contents.push({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.text }]
+    });
+  });
+
+  // Add current prompt with system instructions
+  contents.push({
+    role: 'user',
+    parts: [{ text: `System: ${systemPrompt}\n\nUser Question: ${sanitizedPrompt}` }]
+  });
+
+  let timeoutId;
+  try {
+    // Timeout Promise
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error('Gemini API timeout')), 12000);
+    });
+
+    const apiPromise = model.generateContent({ contents });
+
+    const result = await Promise.race([apiPromise, timeoutPromise]);
+    clearTimeout(timeoutId);
+
+    if (result && result.response) {
+      return result.response.text();
+    }
+    throw new Error("Invalid response from Gemini");
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.error("Gemini Error:", error.message);
+    return fallbackChatResponse(sanitizedPrompt, context);
+  }
+}
+
+module.exports = { suggestCategory, generateChatResponse };

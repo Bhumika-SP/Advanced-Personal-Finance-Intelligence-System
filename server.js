@@ -24,11 +24,11 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-      "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
       "style-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
       "font-src": ["'self'", "https://fonts.gstatic.com"],
       "img-src": ["'self'", "data:", "https:"],
-      "connect-src": ["'self'", "https://generativelanguage.googleapis.com", "https://cdn.jsdelivr.net"]
+      "connect-src": ["'self'", "https://generativelanguage.googleapis.com", "https://cdn.jsdelivr.net", "https://unpkg.com"]
     }
   },
   crossOriginEmbedderPolicy: false

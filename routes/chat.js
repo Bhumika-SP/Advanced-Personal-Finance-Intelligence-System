@@ -120,40 +120,40 @@ async function resolveCategory(userId, raw) {
 //   return `You have ${count} transactions in ${label}. Ask for totals, top categories, or budget status.`;
 // }
 
-// router.get("/", auth, async (req, res) => {
-//   // Only return the chat page, no messages initially
-//   res.render("chat", { 
-//     messages: [],
-//     currentPath: req.path
-//   });
-// });
+router.get("/", auth, async (req, res) => {
+  // Only return the chat page, no messages initially
+  res.render("chat", { 
+    messages: [],
+    currentPath: req.path
+  });
+});
 
-// router.post("/message", auth, async (req, res) => {
-//   try {
-//     const text = (req.body && req.body.text) || "";
+router.post("/message", auth, async (req, res) => {
+  try {
+    const text = (req.body && req.body.text) || "";
 
-//     // Save user message to database
-//     await ChatMessage.create({ user: req.userId, role: 'user', text });
+    // Save user message to database
+    await ChatMessage.create({ user: req.userId, role: 'user', text });
 
-//     // Get AI response
-//     const reply = await handleQuery(req.userId, text);
+    // Get AI response
+    const reply = await handleQuery(req.userId, text);
 
-//     // Save AI response to database
-//     await ChatMessage.create({ user: req.userId, role: 'assistant', text: reply });
+    // Save AI response to database
+    await ChatMessage.create({ user: req.userId, role: 'assistant', text: reply });
 
-//     // Return JSON response with the AI's reply
-//     res.json({ 
-//       success: true, 
-//       reply: reply 
-//     });
-//   } catch (e) {
-//     console.error('Error processing chat message:', e);
-//     res.status(500).json({ 
-//       success: false, 
-//       reply: 'Sorry, something went wrong. Please try again.' 
-//     });
-//   }
-// });
+    // Return JSON response with the AI's reply
+    res.json({ 
+      success: true, 
+      reply: reply 
+    });
+  } catch (e) {
+    console.error('Error processing chat message:', e);
+    res.status(500).json({ 
+      success: false, 
+      reply: 'Sorry, something went wrong. Please try again.' 
+    });
+  }
+});
 
 
 async function handleQuery(userId, text) {
